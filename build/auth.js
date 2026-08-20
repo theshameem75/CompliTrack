@@ -1,27 +1,79 @@
-import { blocks, setSession } from './blocks-client.js';
-import { apiErrorMessage, apiResponseMessage } from './api-response.js';
+import { blocks, setSession } from "./blocks-client.js";
+import { apiErrorMessage, apiResponseMessage } from "./api-response.js";
 
-const content = document.querySelector('#authContent');
-const message = document.querySelector('#authMessage');
+const content = document.querySelector("#authContent");
+const message = document.querySelector("#authMessage");
+const query = new URLSearchParams(location.search);
 
-function form(mode) {
-  const reset = mode === 'reset', signup = mode === 'signup';
-  content.innerHTML = `<h1>${reset ? 'Reset your password' : signup ? 'Create your account' : 'Welcome back'}</h1><p>${reset ? 'Enter your email and reset token to choose a new password.' : signup ? 'Set up your CompliTrack workspace account.' : 'Sign in to manage training compliance.'}</p><form>${!reset && !signup ? '<label>Email</label><input name="username" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required placeholder="Your password">' : signup ? '<label>Full name</label><input name="name" required placeholder="Jordan Davis"><label>Work email</label><input name="email" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">' : '<label>Email</label><input name="email" type="email" required placeholder="you@company.com"><label>Reset token</label><input name="token" required placeholder="Token from your email"><label>New password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">'}<button>${reset ? 'Set new password' : signup ? 'Create account' : 'Sign in'}</button></form><div class="auth-links">${reset || signup ? '<button data-mode="login">Back to sign in</button>' : '<button data-mode="signup">Create account</button><button data-mode="recover">Forgot password?</button>'}</div>`;
-  content.querySelector('form').addEventListener('submit', event => submit(event, mode));
-  content.querySelectorAll('[data-mode]').forEach(button => { button.onclick = () => form(button.dataset.mode === 'recover' ? 'recover' : button.dataset.mode); });
+function resolveMode() {
+  if (location.pathname === "/activate") return "activate";
+  if (location.pathname === "/recover") return "recover";
+  if (location.pathname === "/reset-password") return "reset";
+  return query.get("mode") || "login";
+}
+
+function fields(mode) {
+  if (mode === "activate") return `<input name="code" type="hidden" value="${escapeAttribute(query.get("code") || "")}"><input name="language" type="hidden" value="${escapeAttribute(query.get("lang") || "en-US")}"><p class="activation-note">Click below to verify your invitation and activate your account.</p>`;
+  if (mode === "signup") return '<label>Full name</label><input name="name" required placeholder="Jordan Davis"><label>Work email</label><input name="email" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">';
+  if (mode === "reset") return `<label>Email</label><input name="email" type="email" required placeholder="you@company.com"><label>Reset token</label><input name="token" required value="${escapeAttribute(query.get("token") || query.get("code") || "")}" placeholder="Token from your email"><label>New password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">`;
+  if (mode === "recover") return '<label>Email</label><input name="email" type="email" required placeholder="you@company.com">';
+  return '<label>Email</label><input name="username" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required placeholder="Your password">';
+}
+
+function copy(mode) {
+  return {
+    activate: ["Activate your account", "Confirm your invitation to continue.", "Activate account"],
+    signup: ["Create your account", "Set up your CompliTrack workspace account.", "Create account"],
+    reset: ["Reset your password", "Choose a new password for your account.", "Set new password"],
+    recover: ["Recover your account", "Enter your email to receive recovery instructions.", "Send recovery email"],
+    login: ["Welcome back", "Sign in to manage training compliance.", "Sign in"],
+  }[mode] || ["Welcome back", "Sign in to continue.", "Sign in"];
+}
+
+function render(mode) {
+  const [title, description, button] = copy(mode);
+  const codeMissing = mode === "activate" && !query.get("code");
+  content.innerHTML = `<h1>${title}</h1><p>${description}</p><form>${fields(mode)}<button ${codeMissing ? "disabled" : ""}>${button}</button></form><div class="auth-links">${mode === "login" ? '<button data-mode="signup">Create account</button><button data-mode="recover">Forgot password?</button>' : '<button data-mode="login">Back to sign in</button>'}</div>`;
+  if (codeMissing) message.textContent = "This activation link is missing its activation code.";
+  content.querySelector("form").addEventListener("submit", (event) => submit(event, mode));
+  content.querySelectorAll("[data-mode]").forEach((buttonElement) => { buttonElement.onclick = () => { history.replaceState({}, "", "/auth.html"); render(buttonElement.dataset.mode); }; });
 }
 
 async function submit(event, mode) {
-  event.preventDefault(); message.textContent = '';
+  event.preventDefault();
+  message.textContent = "";
   const request = Object.fromEntries(new FormData(event.currentTarget));
+  const button = event.currentTarget.querySelector("button");
+  button.disabled = true;
   try {
-    const response = mode === 'signup' ? await blocks.auth.signup(request) : mode === 'recover' ? await blocks.auth.recover(request) : mode === 'reset' ? await blocks.auth.resetPassword(request) : await blocks.auth.login(request);
-    if (response?.error || response?.error_description || response?.isSuccess === false) {
-      throw response;
+    const response = mode === "activate"
+      ? await blocks.auth.activate(request)
+      : mode === "signup"
+        ? await blocks.auth.signup(request)
+        : mode === "recover"
+          ? await blocks.auth.recover(request)
+          : mode === "reset"
+            ? await blocks.auth.resetPassword(request)
+            : await blocks.auth.login(request);
+    if (response?.error || response?.error_description || response?.isSuccess === false) throw response;
+    if (mode === "login") {
+      setSession(response);
+      location.href = "/";
+      return;
     }
-    if (mode === 'login') { setSession(response); location.href = '/'; }
-    else message.textContent = apiResponseMessage(response, 'Request completed successfully.');
-  } catch (error) { message.textContent = apiErrorMessage(error); }
+    message.textContent = apiResponseMessage(response, "Request completed successfully.");
+    if (mode === "activate") {
+      event.currentTarget.remove();
+      content.querySelector("[data-mode='login']").textContent = "Continue to sign in";
+    }
+  } catch (error) {
+    message.textContent = apiErrorMessage(error);
+    button.disabled = false;
+  }
 }
 
-form(new URLSearchParams(location.search).get('mode') || 'login');
+function escapeAttribute(value) {
+  return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]);
+}
+
+render(resolveMode());

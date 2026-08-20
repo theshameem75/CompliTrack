@@ -16,7 +16,12 @@ const types = {
 
 const server = http.createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
-  const relativePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+  const authRoutes = new Set(["/activate", "/recover", "/reset-password", "/login"]);
+  const relativePath = pathname === "/"
+    ? "index.html"
+    : authRoutes.has(pathname)
+      ? "auth.html"
+      : pathname.replace(/^\/+/, "");
   const file = path.resolve(root, relativePath);
 
   if (file !== root && !file.startsWith(`${root}${path.sep}`)) {
