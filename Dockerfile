@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 
-ARG ci_build
+ARG ci_build=prod
 
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build:${ci_build}
 
