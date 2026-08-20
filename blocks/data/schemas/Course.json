@@ -3,6 +3,8 @@
   "collectionName": "Course",
   "fields": [
     { "name": "organizationId", "type": "string" },
+    { "name": "createdAt", "type": "datetime" },
+    { "name": "updatedAt", "type": "datetime" },
     { "name": "name", "type": "string" },
     { "name": "localizedNameKey", "type": "string" },
     { "name": "description", "type": "string" },

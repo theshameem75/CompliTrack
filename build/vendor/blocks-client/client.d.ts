@@ -1,0 +1,80 @@
+import { BlocksAuthenticationClient } from "./auth/auth-client.js";
+import { BlocksDataClient } from "./data/data-client.js";
+import { BlocksHttpClient } from "./http/http-client.js";
+import { BlocksIAMClient } from "./iam/iam-client.js";
+import { BlocksLocalizationClient } from "./localization/localization-client.js";
+import { BlocksMailClient } from "./mail/mail-client.js";
+import { BlocksMfaClient } from "./mfa/mfa-client.js";
+import { BlocksNotifierClient } from "./notifier/notifier-client.js";
+export type BlocksOidcConfig = {
+    /**
+     * Public browser OIDC client id used by Blocks IAM IdpController and refresh-token calls.
+     */
+    clientId: string;
+    /**
+     * Browser callback URL registered for the client. Defaults to `<origin>/login/callback` in browsers.
+     */
+    redirectUri?: string;
+    /**
+     * OIDC scope used by default for hosted login/refresh helpers. Defaults to `openid profile`.
+     */
+    scope?: string;
+    /**
+     * IAM/OIDC authority URL kept for app-level metadata. Blocks API calls in this SDK use `apiUrl`.
+     */
+    url: string;
+};
+export type BlocksClientConfig = {
+    /**
+     * Caller-owned bearer token or token resolver.
+     * The SDK reads it before protected API calls, but never stores, refreshes, or clears it.
+     */
+    accessToken?: string | (() => Promise<string | undefined> | string | undefined);
+    /**
+     * Blocks API base URL, for example `https://api.seliseblocks.com`.
+     */
+    apiUrl: string;
+    /**
+     * Optional Blocks application domain for consumer app metadata.
+     */
+    appDomain?: string;
+    /**
+     * Optional fetch-compatible function for tests, SSR, or custom runtimes.
+     */
+    fetch?: typeof fetch;
+    /**
+     * Optional hosted IdP/OIDC browser-flow configuration.
+     */
+    oidc?: BlocksOidcConfig;
+    /**
+     * Required Blocks tenant key. The SDK sends this as the `x-blocks-key` header on every request.
+     */
+    xBlocksKey: string;
+};
+export type BlocksClient = {
+    auth: BlocksAuthenticationClient;
+    config: Readonly<RequiredConfig>;
+    data: BlocksDataClient;
+    http: BlocksHttpClient;
+    iam: BlocksIAMClient;
+    localization: BlocksLocalizationClient;
+    mail: BlocksMailClient;
+    mfa: BlocksMfaClient;
+    notifier: BlocksNotifierClient;
+};
+export type RequiredConfig = {
+    accessToken?: string | (() => Promise<string | undefined> | string | undefined);
+    apiUrl: string;
+    appDomain?: string;
+    oidc?: BlocksOidcConfig & {
+        redirectUri: string;
+        scope: string;
+    };
+    xBlocksKey: string;
+};
+/**
+ * What: creates a framework-neutral Blocks SDK instance for one tenant/app runtime.
+ * Why: frontend code needs a single configured entry point for IAM, Auth, Data, and Localization APIs.
+ * How: pass `apiUrl` and `xBlocksKey`; optionally pass an `accessToken` callback and OIDC config. The SDK never adds `ProjectKey` and never stores tokens.
+ */
+export declare function createBlocksClient(config: BlocksClientConfig): BlocksClient;

@@ -3,11 +3,14 @@
   "collectionName": "CourseAssignment",
   "fields": [
     { "name": "organizationId", "type": "string" },
+    { "name": "createdAt", "type": "datetime" },
+    { "name": "updatedAt", "type": "datetime" },
     { "name": "courseId", "type": "string" },
     { "name": "employeeId", "type": "string" },
     { "name": "assignedBy", "type": "string" },
     { "name": "sourceRole", "type": "string" },
     { "name": "status", "type": "string" },
+    { "name": "isActive", "type": "boolean" },
     { "name": "assignedAt", "type": "datetime" },
     { "name": "dueAt", "type": "datetime" },
     { "name": "lastReminderAt", "type": "datetime" }
