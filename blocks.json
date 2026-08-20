@@ -1,0 +1,6 @@
+{
+  "projectKey": "Dba0c99247e2e4e4091e1bfbcc3648396",
+  "appDomain": "https://dbgmze.slsblx.com",
+  "apiUrl": "https://blocksapi.slsblx.com",
+  "data": { "schemasDir": "blocks/data/schemas", "rulesFile": "blocks/data/rules.json" }
+}
