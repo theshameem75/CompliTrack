@@ -13,7 +13,7 @@ function resolveMode() {
 }
 
 function fields(mode) {
-  if (mode === "activate") return `<input name="code" type="hidden" value="${escapeAttribute(query.get("code") || "")}"><input name="language" type="hidden" value="${escapeAttribute(query.get("lang") || "en-US")}"><p class="activation-note">Click below to verify your invitation and activate your account.</p>`;
+  if (mode === "activate") return `<input name="code" type="hidden" value="${escapeAttribute(query.get("code") || "")}"><label>First name</label><input name="firstName" autocomplete="given-name" required placeholder="Your first name"><label>Last name</label><input name="lastName" autocomplete="family-name" required placeholder="Your last name"><label>New password</label><input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"><label>Confirm password</label><input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter the password again">`;
   if (mode === "signup") return '<label>Full name</label><input name="name" required placeholder="Jordan Davis"><label>Work email</label><input name="email" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">';
   if (mode === "reset") return `<label>Email</label><input name="email" type="email" required placeholder="you@company.com"><label>Reset token</label><input name="token" required value="${escapeAttribute(query.get("token") || query.get("code") || "")}" placeholder="Token from your email"><label>New password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">`;
   if (mode === "recover") return '<label>Email</label><input name="email" type="email" required placeholder="you@company.com">';
@@ -43,6 +43,13 @@ async function submit(event, mode) {
   event.preventDefault();
   message.textContent = "";
   const request = Object.fromEntries(new FormData(event.currentTarget));
+  if (mode === "activate") {
+    if (request.password !== request.confirmPassword) {
+      message.textContent = "Passwords do not match.";
+      return;
+    }
+    delete request.confirmPassword;
+  }
   const button = event.currentTarget.querySelector("button");
   button.disabled = true;
   try {
@@ -76,4 +83,21 @@ function escapeAttribute(value) {
   return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]);
 }
 
-render(resolveMode());
+async function initialize() {
+  const mode = resolveMode();
+  if (mode === "activate" && query.get("code")) {
+    content.innerHTML = "<h1>Activate your account</h1><p>Validating your activation link…</p>";
+    try {
+      const validation = await blocks.auth.validateActivation({ code: query.get("code") });
+      if (validation?.error || validation?.error_description || validation?.isSuccess === false || validation?.valid === false) throw validation;
+    } catch (error) {
+      content.innerHTML = '<h1>Activation link unavailable</h1><p>This activation link is invalid or has expired.</p><div class="auth-links"><button data-mode="login">Back to sign in</button></div>';
+      message.textContent = apiErrorMessage(error, "This activation link is invalid or has expired.");
+      content.querySelector("[data-mode='login']").onclick = () => { location.href = "/auth.html"; };
+      return;
+    }
+  }
+  render(mode);
+}
+
+initialize();
