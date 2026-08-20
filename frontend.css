@@ -1,0 +1,146 @@
+.table-scroll {
+  overflow: auto;
+}
+.cell-sub {
+  display: block;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.row-actions {
+  display: flex;
+  gap: 6px;
+}
+.small {
+  padding: 7px 10px;
+}
+.danger {
+  color: #d95f58;
+  border-color: #f0cac7;
+}
+.empty-state {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 48px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+.empty-state small {
+  color: #aaa;
+}
+.form-panel {
+  max-width: 760px;
+}
+.form-panel form,
+.modal form {
+  display: grid;
+  gap: 15px;
+}
+.form-panel label,
+.modal label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  color: #666477;
+}
+.form-panel input,
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #dedde6;
+  border-radius: 7px;
+  background: #fff;
+  font: 13px "DM Sans";
+}
+.modal textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+.check {
+  display: flex !important;
+  align-items: center;
+  grid-template-columns: auto 1fr !important;
+}
+.check input {
+  width: auto;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.modal-shell {
+  position: fixed;
+  inset: 0;
+  background: #28233a80;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.modal {
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 13px;
+  padding: 24px;
+  box-shadow: 0 25px 80px #211b3b40;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-head h2 {
+  margin: 0;
+  font: 700 18px "Plus Jakarta Sans";
+}
+.modal-head button {
+  border: 0;
+  background: none;
+  font-size: 25px;
+  color: #888;
+}
+.notification-list {
+  display: grid;
+  gap: 8px;
+}
+.notification-list > button {
+  display: grid;
+  gap: 5px;
+  text-align: left;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+.notification-list small {
+  color: var(--muted);
+}
+.toast.error {
+  background: #b94f49;
+}
+.profile {
+  cursor: pointer;
+}
+.profile:hover {
+  background: #faf9ff;
+  border-radius: 8px;
+}
+@media (max-width: 760px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-shell {
+    padding: 10px;
+  }
+  .modal {
+    padding: 18px;
+  }
+}

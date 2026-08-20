@@ -9,7 +9,7 @@
     "build": "node build.cjs",
     "build:dev": "node build.cjs",
     "build:prod": "node build.cjs",
-    "test": "node --check app.js && node --check auth.js && node --check blocks-client.js && node --check compliance-service.js && node --check src/compliance-domain.js && node --test src/compliance-domain.test.js"
+    "test": "node --check app.js && node --check api-response.js && node --check auth.js && node --check blocks-client.js && node --check compliance-service.js && node --check frontend.js && node --check src/compliance-domain.js && node --test src/compliance-domain.test.js"
   },
   "dependencies": {
     "@seliseblocks/cli-os": "^0.2.4",

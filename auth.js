@@ -1,4 +1,5 @@
 import { blocks, setSession } from './blocks-client.js';
+import { apiErrorMessage, apiResponseMessage } from './api-response.js';
 
 const content = document.querySelector('#authContent');
 const message = document.querySelector('#authMessage');
@@ -15,9 +16,12 @@ async function submit(event, mode) {
   const request = Object.fromEntries(new FormData(event.currentTarget));
   try {
     const response = mode === 'signup' ? await blocks.auth.signup(request) : mode === 'recover' ? await blocks.auth.recover(request) : mode === 'reset' ? await blocks.auth.resetPassword(request) : await blocks.auth.login(request);
+    if (response?.error || response?.error_description || response?.isSuccess === false) {
+      throw response;
+    }
     if (mode === 'login') { setSession(response); location.href = '/'; }
-    else message.textContent = 'Success. Check your email for the next step.';
-  } catch (error) { message.textContent = error?.body?.message || error?.body?.error_description || error.message || 'Request failed'; }
+    else message.textContent = apiResponseMessage(response, 'Request completed successfully.');
+  } catch (error) { message.textContent = apiErrorMessage(error); }
 }
 
 form(new URLSearchParams(location.search).get('mode') || 'login');
