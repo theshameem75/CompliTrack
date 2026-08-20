@@ -1,0 +1,8 @@
+{
+  "name": "complitrack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Training and certification compliance workspace",
+  "scripts": { "start": "node server.cjs", "test": "node --check app.js" },
+  "dependencies": { "@seliseblocks/cli-os": "^0.2.4" }
+}
