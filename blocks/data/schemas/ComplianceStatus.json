@@ -1,13 +1,62 @@
 {
-  "schemaName": "ComplianceOrgSettings",
-  "collectionName": "sb_ComplianceOrgSettingss",
+  "schemaName": "ComplianceStatus",
+  "collectionName": "sb_ComplianceStatuss",
   "fields": [
     {
       "name": "organizationId",
       "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "employeeId",
+      "type": "String",
       "isUniqueData": true,
       "isArray": false,
       "isPIIData": false
+    },
+    {
+      "name": "status",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "score",
+      "type": "Decimal",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "requiredCount",
+      "type": "Int",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "validCount",
+      "type": "Int",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "graceEndsAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "evaluatedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
     },
     {
       "name": "createdAt",
@@ -19,62 +68,6 @@
     {
       "name": "updatedAt",
       "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "gracePeriodDays",
-      "type": "Int",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "autoAssignOnRoleChange",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "managerVerificationRequired",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "autoRestrictNonCompliant",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "autoRestoreAccess",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "reminderDays",
-      "type": "Int",
-      "isArray": true,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "defaultLocale",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "restrictedRoleSlug",
-      "type": "String",
       "isArray": false,
       "isPIIData": false,
       "isUniqueData": false

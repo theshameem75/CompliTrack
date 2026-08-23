@@ -3,9 +3,15 @@ import { apiResponseMessage } from "./api-response.js";
 
 const data = Object.freeze({
   courses: blocks.data.collection("Course"),
+  requirements: blocks.data.collection("CourseRequirement"),
   assignments: blocks.data.collection("CourseAssignment"),
   completions: blocks.data.collection("Completion"),
+  verifications: blocks.data.collection("Verification"),
   certificates: blocks.data.collection("Certificate"),
+  complianceStatuses: blocks.data.collection("ComplianceStatus"),
+  complianceHistory: blocks.data.collection("ComplianceHistory"),
+  accessRestrictions: blocks.data.collection("AccessRestriction"),
+  notifications: blocks.data.collection("ComplianceNotification"),
   settings: blocks.data.collection("ComplianceOrgSettings"),
   audit: blocks.data.collection("ComplianceAuditEvent"),
 });
@@ -54,13 +60,14 @@ async function audit(
 }
 
 export async function loadDashboard() {
-  const [courses, assignments, completions, certificates, settings] =
+  const [courses, assignments, completions, certificates, settings, complianceStatuses] =
     await Promise.all([
       data.courses.list({ pageNo: 1, pageSize: 100 }),
       data.assignments.list({ pageNo: 1, pageSize: 100 }),
       data.completions.list({ pageNo: 1, pageSize: 100 }),
       data.certificates.list({ pageNo: 1, pageSize: 100 }),
       data.settings.list({ pageNo: 1, pageSize: 10 }),
+      data.complianceStatuses.list({ pageNo: 1, pageSize: 200 }),
     ]);
   return {
     courses: unwrap(courses),
@@ -68,6 +75,7 @@ export async function loadDashboard() {
     completions: unwrap(completions),
     certificates: unwrap(certificates),
     settings: unwrap(settings),
+    complianceStatuses: unwrap(complianceStatuses),
   };
 }
 
@@ -88,6 +96,11 @@ export async function saveCourse(course, actor) {
       ...course,
       durationMinutes: Number(course.durationMinutes),
       validityDays: Number(course.validityDays),
+      isMandatory: course.isMandatory !== false,
+      managerVerificationRequired: course.managerVerificationRequired !== false,
+      supportedLanguages: Array.isArray(course.supportedLanguages)
+        ? course.supportedLanguages
+        : String(course.supportedLanguages || "en-US").split(",").map((value) => value.trim()).filter(Boolean),
       requiredRoles: Array.isArray(course.requiredRoles)
         ? course.requiredRoles
         : String(course.requiredRoles || "")
@@ -126,6 +139,7 @@ export async function assignCourse({
     employeeId,
     assignedBy,
     sourceRole,
+    assignmentSource: sourceRole === "Manual" ? "Manual Assignment" : "Role Policy",
     status: "Assigned",
     isActive: true,
     assignedAt: timestamp,
@@ -218,6 +232,8 @@ export async function saveOrgSettings(settings, actorId) {
           .map(Number),
     autoAssignOnRoleChange: Boolean(settings.autoAssignOnRoleChange),
     managerVerificationRequired: Boolean(settings.managerVerificationRequired),
+    autoRestrictNonCompliant: Boolean(settings.autoRestrictNonCompliant),
+    autoRestoreAccess: Boolean(settings.autoRestoreAccess),
     updatedAt: timestamp,
   };
   const result = id
@@ -313,6 +329,7 @@ export async function startAssignment(assignment, actorId) {
     id = assignment.id || assignment.itemId;
   const result = await data.assignments.update(id, {
     status: "InProgress",
+    startedAt: updatedAt,
     updatedAt,
   });
   await audit(
@@ -341,10 +358,13 @@ export async function submitCompletion(
   const completion = await data.completions.create({
     organizationId: assignment.organizationId,
     assignmentId,
+    courseId: assignment.courseId,
     employeeId: actorId,
     completedAt,
     evidenceFileId,
     score,
+    passed: score >= 0,
+    completionMethod: evidenceFileId ? "Evidence" : "Self Attested",
     notes,
     verificationStatus: "Pending",
     createdAt: completedAt,
@@ -352,6 +372,7 @@ export async function submitCompletion(
   });
   await data.assignments.update(assignmentId, {
     status: "Completed",
+    completedAt,
     updatedAt: completedAt,
   });
   await audit(
@@ -381,11 +402,23 @@ export async function verifyCompletion({
     verificationStatus: approved ? "Approved" : "Rejected",
     verifiedBy: managerId,
     verifiedAt,
-    notes: approved ? completion.notes : reason,
+    rejectionReason: approved ? null : reason,
     updatedAt: verifiedAt,
   });
   await data.assignments.update(assignmentId, {
     status: approved ? "ManagerVerification" : "InProgress",
+    updatedAt: verifiedAt,
+  });
+  await data.verifications.create({
+    organizationId: assignment.organizationId,
+    completionId,
+    assignmentId,
+    employeeId: completion.employeeId,
+    verifierId: managerId,
+    status: approved ? "Approved" : "Rejected",
+    comments: reason,
+    verifiedAt,
+    createdAt: verifiedAt,
     updatedAt: verifiedAt,
   });
   await audit(
@@ -422,11 +455,15 @@ export async function issueCertificate({
     courseId: assignment.courseId,
     certificateNumber: crypto.randomUUID(),
     issuedAt,
+    issuedBy: issuerId,
     expiresAt: new Date(
       Date.now() + course.validityDays * 86_400_000,
     ).toISOString(),
     status: "Active",
     pdfFileId,
+    templateId: course.certificateTemplateId || null,
+    verificationCode: crypto.randomUUID(),
+    sentReminderDays: [],
     createdAt: issuedAt,
     updatedAt: issuedAt,
   });

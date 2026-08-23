@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STATUS, transitionAssignment, assignmentsForRole, nextCompletionStatus, verifyCompletion, certificateState, reminderDue, accessDecision, makeAuditEvent } from './compliance-domain.js';
+import { STATUS, transitionAssignment, assignmentsForRole, nextCompletionStatus, verifyCompletion, certificateState, reminderDue, accessDecision, evaluateCompliance, makeAuditEvent } from './compliance-domain.js';
 
 const now = new Date('2026-08-20T00:00:00Z');
 
@@ -46,4 +46,15 @@ test('restriction starts after grace and active replacement restores access', ()
 test('audit events carry tenant ownership and timestamps', () => {
   const event = makeAuditEvent({ organizationId: 'o1', actorId: 'e1', action: 'assignment.started', entityType: 'CourseAssignment', entityId: 'a1', now });
   assert.equal(event.organizationId, 'o1'); assert.equal(event.occurredAt, now.toISOString());
+});
+
+test('compliance engine evaluates every active required course', () => {
+  const assignments = [
+    { employeeId: 'e1', courseId: 'c1', isActive: true },
+    { employeeId: 'e1', courseId: 'c2', isActive: true },
+  ];
+  const certificates = [{ employeeId: 'e1', courseId: 'c1', status: 'Active', expiresAt: '2027-01-01T00:00:00Z' }];
+  const result = evaluateCompliance(assignments, certificates, 'e1', { gracePeriodDays: 7, autoRestrictNonCompliant: true, reminderDays: [60, 30, 7] }, now);
+  assert.equal(result.score, 50);
+  assert.equal(result.status, 'Restricted');
 });

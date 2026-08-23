@@ -1,11 +1,14 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
 const root = fs.existsSync(path.join(__dirname, "build"))
   ? path.join(__dirname, "build")
   : __dirname;
-const port = Number(process.env.PORT || 4173);
+const useHttps = process.argv.includes("--https");
+const port = Number(process.env.PORT || (useHttps ? 5173 : 4173));
+const devHost = "dbgmze.dev.slsblx.com";
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -14,9 +17,9 @@ const types = {
   ".svg": "image/svg+xml",
 };
 
-const server = http.createServer((request, response) => {
-  const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
-  const authRoutes = new Set(["/activate", "/recover", "/reset-password", "/login"]);
+const handler = (request, response) => {
+  const pathname = decodeURIComponent(new URL(request.url, `${useHttps ? "https" : "http"}://${devHost}`).pathname);
+  const authRoutes = new Set(["/activate", "/recover", "/reset-password", "/login", "/login/callback"]);
   const relativePath = pathname === "/"
     ? "index.html"
     : authRoutes.has(pathname)
@@ -39,7 +42,23 @@ const server = http.createServer((request, response) => {
     });
     response.end(data);
   });
-});
+};
+
+let server;
+if (useHttps) {
+  const keyPath = path.join(__dirname, ".cert", "dev-key.pem");
+  const certPath = path.join(__dirname, ".cert", "dev-cert.pem");
+  if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+    console.error("Local HTTPS certificate is missing. Run: npm run cert");
+    process.exit(1);
+  }
+  server = https.createServer(
+    { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) },
+    handler,
+  );
+} else {
+  server = http.createServer(handler);
+}
 
 server.on("error", (error) => {
   if (error.code === "EADDRINUSE") {
@@ -52,5 +71,6 @@ server.on("error", (error) => {
 });
 
 server.listen(port, () => {
-  console.log(`CompliTrack running at http://localhost:${port}`);
+  const origin = useHttps ? `https://${devHost}:${port}` : `http://localhost:${port}`;
+  console.log(`CompliTrack running at ${origin}`);
 });

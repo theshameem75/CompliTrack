@@ -1,0 +1,71 @@
+{
+  "id": "434e8e35-bc7f-48f7-ad59-cbf0ee0ebd42",
+  "collectionName": "",
+  "fields": [
+    {
+      "name": "Street",
+      "type": "Int",
+      "isArray": true,
+      "isPIIData": true,
+      "isUniqueData": true,
+      "description": "",
+      "fields": [],
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0,
+      "validationRule": null,
+      "totalValidationRules": 0,
+      "totalReadPolicies": 0,
+      "totalWritePolicies": 0,
+      "totalEditPolicies": 0,
+      "totalDeletePolicies": 0
+    },
+    {
+      "name": "HouseNo",
+      "type": "String",
+      "isArray": true,
+      "isPIIData": true,
+      "isUniqueData": true,
+      "description": "",
+      "fields": [],
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0,
+      "validationRule": null,
+      "totalValidationRules": 0,
+      "totalReadPolicies": 0,
+      "totalWritePolicies": 0,
+      "totalEditPolicies": 0,
+      "totalDeletePolicies": 0
+    }
+  ],
+  "schemaName": "address",
+  "schemaType": 2,
+  "projectKey": "",
+  "projectShortKey": "",
+  "projectSchemaName": "address",
+  "querySchema": "addresss",
+  "mutationSchemas": [
+    "insertaddress",
+    "updateaddress",
+    "deleteaddress"
+  ],
+  "readAccessLevel": 1,
+  "writeAccessLevel": 1,
+  "editAccessLevel": 1,
+  "deleteAccessLevel": 1,
+  "readPolicies": [],
+  "writePolicies": [],
+  "editPolicies": [],
+  "deletePolicies": [],
+  "schemaReferences": [
+    "person"
+  ],
+  "totalSchemaReferences": 1,
+  "totalReadPolicies": 0,
+  "totalWritePolicies": 0,
+  "totalEditPolicies": 0,
+  "totalDeletePolicies": 0
+}

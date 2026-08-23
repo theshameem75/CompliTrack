@@ -1,10 +1,66 @@
 {
-  "schemaName": "CourseAssignment",
-  "collectionName": "sb_CourseAssignments",
+  "schemaName": "CourseRequirement",
+  "collectionName": "sb_CourseRequirements",
   "fields": [
     {
       "name": "organizationId",
       "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "courseId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "ruleType",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "attribute",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "operator",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "values",
+      "type": "String",
+      "isArray": true,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "effectiveFrom",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "effectiveUntil",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "isActive",
+      "type": "Boolean",
       "isArray": false,
       "isPIIData": false,
       "isUniqueData": false
@@ -18,97 +74,6 @@
     },
     {
       "name": "updatedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "courseId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "employeeId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "assignedBy",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "sourceRole",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "assignmentSource",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "status",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "isActive",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "assignedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "startedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "completedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "dueAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "cancellationReason",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "lastReminderAt",
       "type": "DateTime",
       "isArray": false,
       "isPIIData": false,

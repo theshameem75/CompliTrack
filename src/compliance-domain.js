@@ -44,6 +44,24 @@ export function reminderDue(certificate, reminderDays = [60, 30, 7], now = new D
   return reminderDays.includes(day) && !sent.has(day) ? day : null;
 }
 
+export function evaluateCompliance(assignments, certificates, employeeId, settings, now = new Date()) {
+  const required = assignments.filter(item => item.employeeId === employeeId && item.isActive !== false);
+  if (!required.length) return { status: 'Compliant', score: 100, requiredCount: 0, validCount: 0 };
+  const validCourseIds = new Set(certificates.filter(item => item.employeeId === employeeId && item.status !== CERTIFICATE_STATUS.REVOKED && new Date(item.expiresAt) >= now).map(item => item.courseId));
+  const validCount = required.filter(item => validCourseIds.has(item.courseId)).length;
+  const score = Math.round((validCount / required.length) * 1000) / 10;
+  if (validCount === required.length) {
+    const expiring = certificates.some(item => item.employeeId === employeeId && validCourseIds.has(item.courseId) && certificateState(item, settings, now) === CERTIFICATE_STATUS.EXPIRING);
+    return { status: expiring ? 'Expiring Soon' : 'Compliant', score, requiredCount: required.length, validCount };
+  }
+  const missingCourseIds = new Set(required.filter(item => !validCourseIds.has(item.courseId)).map(item => item.courseId));
+  const expiries = certificates.filter(item => item.employeeId === employeeId && missingCourseIds.has(item.courseId) && item.status !== CERTIFICATE_STATUS.REVOKED && new Date(item.expiresAt) < now).map(item => new Date(item.expiresAt).getTime()).filter(Number.isFinite);
+  const latestExpiry = expiries.length ? Math.max(...expiries) : 0;
+  const graceEndsAt = latestExpiry ? new Date(latestExpiry + settings.gracePeriodDays * DAY_MS) : null;
+  if (graceEndsAt && now <= graceEndsAt) return { status: 'Grace Period', score, requiredCount: required.length, validCount, graceEndsAt: graceEndsAt.toISOString() };
+  return { status: settings.autoRestrictNonCompliant ? 'Restricted' : 'Non-Compliant', score, requiredCount: required.length, validCount, graceEndsAt: graceEndsAt?.toISOString() };
+}
+
 export function accessDecision(certificates, employeeId, settings, now = new Date()) {
   const employeeCertificates = certificates.filter(item => item.employeeId === employeeId && item.status !== CERTIFICATE_STATUS.REVOKED);
   if (employeeCertificates.some(item => new Date(item.expiresAt) >= now)) return { restricted: false, restore: true };

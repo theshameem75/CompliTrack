@@ -1,9 +1,79 @@
 {
-  "schemaName": "Certificate",
-  "collectionName": "sb_Certificates",
+  "schemaName": "ComplianceNotification",
+  "collectionName": "sb_ComplianceNotifications",
   "fields": [
     {
       "name": "organizationId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "recipientId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "eventType",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "entityType",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "entityId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "channel",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "status",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "deduplicationKey",
+      "type": "String",
+      "isUniqueData": true,
+      "isArray": false,
+      "isPIIData": false
+    },
+    {
+      "name": "scheduledAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "sentAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "failureReason",
       "type": "String",
       "isArray": false,
       "isPIIData": false,
@@ -19,104 +89,6 @@
     {
       "name": "updatedAt",
       "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "completionId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "employeeId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "courseId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "certificateNumber",
-      "type": "String",
-      "isUniqueData": true,
-      "isArray": false,
-      "isPIIData": false
-    },
-    {
-      "name": "issuedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "issuedBy",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "expiresAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "status",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "pdfFileId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "templateId",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "verificationCode",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "sentReminderDays",
-      "type": "Int",
-      "isArray": true,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "revokedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "revokedReason",
-      "type": "String",
       "isArray": false,
       "isPIIData": false,
       "isUniqueData": false

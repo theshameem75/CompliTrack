@@ -1,1 +1,126 @@
-{"schemaName":"Completion","collectionName":"Completion","fields":[{"name":"organizationId","type":"string"},{"name":"createdAt","type":"datetime"},{"name":"updatedAt","type":"datetime"},{"name":"assignmentId","type":"string"},{"name":"employeeId","type":"string"},{"name":"completedAt","type":"datetime"},{"name":"evidenceFileId","type":"string"},{"name":"score","type":"decimal"},{"name":"notes","type":"string"},{"name":"verificationStatus","type":"string"},{"name":"verifiedBy","type":"string"},{"name":"verifiedAt","type":"datetime"}]}
+{
+  "schemaName": "Completion",
+  "collectionName": "sb_Completions",
+  "fields": [
+    {
+      "name": "organizationId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "assignmentId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "courseId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "employeeId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "completedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "completionMethod",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "evidenceFileId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "score",
+      "type": "Decimal",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "passed",
+      "type": "Boolean",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "trainerId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "notes",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "verificationStatus",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "verifiedBy",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "verifiedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "rejectionReason",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    }
+  ],
+  "schemaType": 1
+}

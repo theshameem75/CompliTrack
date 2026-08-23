@@ -1,1 +1,70 @@
-{"schemaName":"ComplianceAuditEvent","collectionName":"ComplianceAuditEvent","fields":[{"name":"organizationId","type":"string"},{"name":"createdAt","type":"datetime"},{"name":"updatedAt","type":"datetime"},{"name":"actorId","type":"string"},{"name":"action","type":"string"},{"name":"entityType","type":"string"},{"name":"entityId","type":"string"},{"name":"metadata","type":"string"},{"name":"occurredAt","type":"datetime"}]}
+{
+  "schemaName": "ComplianceAuditEvent",
+  "collectionName": "sb_ComplianceAuditEvents",
+  "fields": [
+    {
+      "name": "organizationId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "actorId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "action",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "entityType",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "entityId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "metadata",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "occurredAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    }
+  ],
+  "schemaType": 1
+}

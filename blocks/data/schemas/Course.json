@@ -1,18 +1,147 @@
 {
   "schemaName": "Course",
-  "collectionName": "Course",
+  "collectionName": "sb_Courses",
   "fields": [
-    { "name": "organizationId", "type": "string" },
-    { "name": "createdAt", "type": "datetime" },
-    { "name": "updatedAt", "type": "datetime" },
-    { "name": "name", "type": "string" },
-    { "name": "localizedNameKey", "type": "string" },
-    { "name": "description", "type": "string" },
-    { "name": "department", "type": "string" },
-    { "name": "requiredRoles", "type": "string", "isArray": true },
-    { "name": "durationMinutes", "type": "integer" },
-    { "name": "validityDays", "type": "integer" },
-    { "name": "certificateTemplateId", "type": "string" },
-    { "name": "isActive", "type": "boolean" }
-  ]
+    {
+      "name": "organizationId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "code",
+      "type": "String",
+      "isUniqueData": true,
+      "isArray": false,
+      "isPIIData": false
+    },
+    {
+      "name": "localizedNameKey",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "description",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "category",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "trainingType",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "provider",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "department",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "requiredRoles",
+      "type": "String",
+      "isArray": true,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "supportedLanguages",
+      "type": "String",
+      "isArray": true,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "durationMinutes",
+      "type": "Int",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "validityDays",
+      "type": "Int",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "isMandatory",
+      "type": "Boolean",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "managerVerificationRequired",
+      "type": "Boolean",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "renewalCourseId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "certificateTemplateId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "isActive",
+      "type": "Boolean",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    }
+  ],
+  "schemaType": 1
 }

@@ -1,8 +1,6 @@
 import {
   blocks,
-  clearSession,
   ensureSession,
-  getSession,
 } from "./blocks-client.js";
 import * as api from "./compliance-service.js";
 import { apiErrorMessage, apiResponseMessage } from "./api-response.js";
@@ -58,7 +56,7 @@ function courseName(id) {
 
 async function bootstrap() {
   if (!(await ensureSession())) {
-    location.href = "/auth.html";
+    location.href = `/login?returnTo=${encodeURIComponent(location.pathname + location.hash)}`;
     return;
   }
   try {
@@ -111,10 +109,9 @@ function bindShell() {
 
 async function logout() {
   try {
-    await blocks.auth.logout({ refreshToken: getSession()?.refresh_token });
+    await blocks.auth.logout();
   } catch {}
-  clearSession();
-  location.href = "/auth.html";
+  location.href = "/login";
 }
 
 async function refresh() {
@@ -420,17 +417,19 @@ async function renderSettings() {
     gracePeriodDays: 7,
     autoAssignOnRoleChange: true,
     managerVerificationRequired: true,
+    autoRestrictNonCompliant: true,
+    autoRestoreAccess: true,
     reminderDays: [60, 30, 7],
     defaultLocale: "en-US",
     restrictedRoleSlug: "restricted-user",
   };
-  const disabled = can("course:assign") ? "" : "disabled";
+  const disabled = can("settings:update") ? "" : "disabled";
   content.innerHTML =
     page(
       "Organization settings",
       "Configure assignment, verification, expiry, and restricted-access policy.",
     ) +
-    `<section class="panel form-panel"><form id="settingsForm"><label>Grace period (days)<input name="gracePeriodDays" type="number" min="0" value="${esc(settings.gracePeriodDays)}" ${disabled}></label><label>Reminder days<input name="reminderDays" value="${esc((settings.reminderDays || []).join(","))}" ${disabled}></label><label>Default locale<input name="defaultLocale" value="${esc(settings.defaultLocale)}" ${disabled}></label><label>Restricted role slug<input name="restrictedRoleSlug" value="${esc(settings.restrictedRoleSlug)}" ${disabled}></label><label class="check"><input name="autoAssignOnRoleChange" type="checkbox" ${settings.autoAssignOnRoleChange ? "checked" : ""} ${disabled}> Auto-assign after role change</label><label class="check"><input name="managerVerificationRequired" type="checkbox" ${settings.managerVerificationRequired ? "checked" : ""} ${disabled}> Require manager verification</label>${can("course:assign") ? '<button class="primary">Save settings</button>' : ""}</form></section>`;
+    `<section class="panel form-panel"><form id="settingsForm"><label>Grace period (days)<input name="gracePeriodDays" type="number" min="0" value="${esc(settings.gracePeriodDays)}" ${disabled}></label><label>Reminder days<input name="reminderDays" value="${esc((settings.reminderDays || []).join(","))}" ${disabled}></label><label>Default locale<input name="defaultLocale" value="${esc(settings.defaultLocale)}" ${disabled}></label><label>Restricted role slug<input name="restrictedRoleSlug" value="${esc(settings.restrictedRoleSlug)}" ${disabled}></label><label class="check"><input name="autoAssignOnRoleChange" type="checkbox" ${settings.autoAssignOnRoleChange ? "checked" : ""} ${disabled}> Auto-assign after role change</label><label class="check"><input name="managerVerificationRequired" type="checkbox" ${settings.managerVerificationRequired ? "checked" : ""} ${disabled}> Require manager verification</label><label class="check"><input name="autoRestrictNonCompliant" type="checkbox" ${settings.autoRestrictNonCompliant ? "checked" : ""} ${disabled}> Restrict access after grace period</label><label class="check"><input name="autoRestoreAccess" type="checkbox" ${settings.autoRestoreAccess ? "checked" : ""} ${disabled}> Restore access when compliant</label>${can("settings:update") ? '<button class="primary">Save settings</button>' : ""}</form></section>`;
   content
     .querySelector("#settingsForm")
     ?.addEventListener("submit", (event) => {
@@ -445,6 +444,10 @@ async function renderSettings() {
               event.currentTarget.autoAssignOnRoleChange.checked,
             managerVerificationRequired:
               event.currentTarget.managerVerificationRequired.checked,
+            autoRestrictNonCompliant:
+              event.currentTarget.autoRestrictNonCompliant.checked,
+            autoRestoreAccess:
+              event.currentTarget.autoRestoreAccess.checked,
           },
           userId(),
         );
@@ -468,7 +471,7 @@ function modal(title, body) {
 function openCourseForm(course = {}) {
   const shell = modal(
     course.name ? "Edit course" : "Create course",
-    `<form id="courseForm"><label>Name<input name="name" required value="${esc(course.name)}"></label><label>Localization key<input name="localizedNameKey" required value="${esc(course.localizedNameKey || "course.name")}"></label><label>Description<textarea name="description">${esc(course.description)}</textarea></label><label>Department<input name="department" required value="${esc(course.department)}"></label><label>Required roles (comma separated)<input name="requiredRoles" required value="${esc((course.requiredRoles || []).join(","))}"></label><div class="form-grid"><label>Duration minutes<input name="durationMinutes" type="number" min="1" required value="${esc(course.durationMinutes || 30)}"></label><label>Validity days<input name="validityDays" type="number" min="1" required value="${esc(course.validityDays || 365)}"></label></div><label>Certificate template ID<input name="certificateTemplateId" value="${esc(course.certificateTemplateId)}"></label><label class="check"><input name="isActive" type="checkbox" ${course.isActive !== false ? "checked" : ""}> Active</label><button class="primary">Save course</button></form>`,
+    `<form id="courseForm"><div class="form-grid"><label>Course code<input name="code" required value="${esc(course.code)}"></label><label>Name<input name="name" required value="${esc(course.name)}"></label></div><label>Localization key<input name="localizedNameKey" required value="${esc(course.localizedNameKey || "course.name")}"></label><label>Description<textarea name="description">${esc(course.description)}</textarea></label><div class="form-grid"><label>Category<input name="category" value="${esc(course.category)}"></label><label>Training type<input name="trainingType" value="${esc(course.trainingType)}"></label></div><label>Provider<input name="provider" value="${esc(course.provider)}"></label><label>Department<input name="department" required value="${esc(course.department)}"></label><label>Required roles (comma separated)<input name="requiredRoles" required value="${esc((course.requiredRoles || []).join(","))}"></label><label>Supported languages<input name="supportedLanguages" value="${esc((course.supportedLanguages || ["en-US"]).join(","))}"></label><div class="form-grid"><label>Duration minutes<input name="durationMinutes" type="number" min="1" required value="${esc(course.durationMinutes || 30)}"></label><label>Validity days<input name="validityDays" type="number" min="1" required value="${esc(course.validityDays || 365)}"></label></div><label>Certificate template ID<input name="certificateTemplateId" value="${esc(course.certificateTemplateId)}"></label><label class="check"><input name="isMandatory" type="checkbox" ${course.isMandatory !== false ? "checked" : ""}> Mandatory training</label><label class="check"><input name="managerVerificationRequired" type="checkbox" ${course.managerVerificationRequired !== false ? "checked" : ""}> Require manager verification</label><label class="check"><input name="isActive" type="checkbox" ${course.isActive !== false ? "checked" : ""}> Active</label><button class="primary">Save course</button></form>`,
   );
   shell.querySelector("form").onsubmit = (event) => {
     event.preventDefault();
@@ -480,6 +483,9 @@ function openCourseForm(course = {}) {
           ...values,
           organizationId: course.organizationId || orgId(),
           isActive: event.currentTarget.isActive.checked,
+          isMandatory: event.currentTarget.isMandatory.checked,
+          managerVerificationRequired:
+            event.currentTarget.managerVerificationRequired.checked,
         },
         userId(),
       );

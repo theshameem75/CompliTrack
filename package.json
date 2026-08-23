@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.cjs",
+    "dev": "node build.cjs && node server.cjs --https",
+    "cert": "node scripts/generate-cert.mjs",
     "build": "node build.cjs",
     "build:dev": "node build.cjs",
     "build:prod": "node build.cjs",
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@seliseblocks/cli-os": "^0.2.4",
-    "@seliseblocks/client": "^0.1.5"
+    "@seliseblocks/client": "^0.1.6",
+    "selfsigned": "^2.4.1"
   }
 }

@@ -36,6 +36,7 @@ function normalizeConfig(config) {
         accessToken: config.accessToken,
         apiUrl: trimTrailingSlash(config.apiUrl),
         appDomain: config.appDomain,
+        onUnauthorized: config.onUnauthorized,
         oidc: config.oidc ? {
             ...config.oidc,
             redirectUri: config.oidc.redirectUri ?? browserRedirectUri(),

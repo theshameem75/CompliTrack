@@ -43,6 +43,13 @@ export type BlocksClientConfig = {
      */
     fetch?: typeof fetch;
     /**
+     * Caller-owned hook invoked at most once per request when a protected call comes back 401.
+     * Should resolve a fresh token (deduping concurrent callers itself, e.g. via a shared
+     * in-flight refresh promise) or `undefined` if the session cannot be recovered -- the SDK
+     * retries the request once with the returned token, or leaves the 401 to throw if none.
+     */
+    onUnauthorized?: () => Promise<string | undefined> | string | undefined;
+    /**
      * Optional hosted IdP/OIDC browser-flow configuration.
      */
     oidc?: BlocksOidcConfig;
@@ -66,6 +73,7 @@ export type RequiredConfig = {
     accessToken?: string | (() => Promise<string | undefined> | string | undefined);
     apiUrl: string;
     appDomain?: string;
+    onUnauthorized?: () => Promise<string | undefined> | string | undefined;
     oidc?: BlocksOidcConfig & {
         redirectUri: string;
         scope: string;

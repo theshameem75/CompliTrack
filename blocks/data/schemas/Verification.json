@@ -1,6 +1,6 @@
 {
-  "schemaName": "CourseAssignment",
-  "collectionName": "sb_CourseAssignments",
+  "schemaName": "Verification",
+  "collectionName": "sb_Verifications",
   "fields": [
     {
       "name": "organizationId",
@@ -10,21 +10,14 @@
       "isUniqueData": false
     },
     {
-      "name": "createdAt",
-      "type": "DateTime",
+      "name": "completionId",
+      "type": "String",
       "isArray": false,
       "isPIIData": false,
       "isUniqueData": false
     },
     {
-      "name": "updatedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "courseId",
+      "name": "assignmentId",
       "type": "String",
       "isArray": false,
       "isPIIData": false,
@@ -38,21 +31,7 @@
       "isUniqueData": false
     },
     {
-      "name": "assignedBy",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "sourceRole",
-      "type": "String",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "assignmentSource",
+      "name": "verifierId",
       "type": "String",
       "isArray": false,
       "isPIIData": false,
@@ -66,49 +45,28 @@
       "isUniqueData": false
     },
     {
-      "name": "isActive",
-      "type": "Boolean",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "assignedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "startedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "completedAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "dueAt",
-      "type": "DateTime",
-      "isArray": false,
-      "isPIIData": false,
-      "isUniqueData": false
-    },
-    {
-      "name": "cancellationReason",
+      "name": "comments",
       "type": "String",
       "isArray": false,
       "isPIIData": false,
       "isUniqueData": false
     },
     {
-      "name": "lastReminderAt",
+      "name": "verifiedAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false
+    },
+    {
+      "name": "updatedAt",
       "type": "DateTime",
       "isArray": false,
       "isPIIData": false,

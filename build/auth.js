@@ -1,4 +1,4 @@
-import { blocks, setSession } from "./blocks-client.js";
+import { blocks, completeLogin, startLogin } from "./blocks-client.js";
 import { apiErrorMessage, apiResponseMessage } from "./api-response.js";
 
 const content = document.querySelector("#authContent");
@@ -6,6 +6,7 @@ const message = document.querySelector("#authMessage");
 const query = new URLSearchParams(location.search);
 
 function resolveMode() {
+  if (location.pathname === "/login/callback") return "callback";
   if (location.pathname === "/activate") return "activate";
   if (location.pathname === "/recover") return "recover";
   if (location.pathname === "/reset-password") return "reset";
@@ -17,7 +18,7 @@ function fields(mode) {
   if (mode === "signup") return '<label>Full name</label><input name="name" required placeholder="Jordan Davis"><label>Work email</label><input name="email" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">';
   if (mode === "reset") return `<label>Email</label><input name="email" type="email" required placeholder="you@company.com"><label>Reset token</label><input name="token" required value="${escapeAttribute(query.get("token") || query.get("code") || "")}" placeholder="Token from your email"><label>New password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">`;
   if (mode === "recover") return '<label>Email</label><input name="email" type="email" required placeholder="you@company.com">';
-  return '<label>Email</label><input name="username" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required placeholder="Your password">';
+  return '<div class="hosted-login"><p>Continue to SELISE Blocks to sign in securely with your organization account.</p></div>';
 }
 
 function copy(mode) {
@@ -26,7 +27,7 @@ function copy(mode) {
     signup: ["Create your account", "Set up your CompliTrack workspace account.", "Create account"],
     reset: ["Reset your password", "Choose a new password for your account.", "Set new password"],
     recover: ["Recover your account", "Enter your email to receive recovery instructions.", "Send recovery email"],
-    login: ["Welcome back", "Sign in to manage training compliance.", "Sign in"],
+    login: ["Welcome back", "Sign in to manage training compliance.", "Continue with SSO"],
   }[mode] || ["Welcome back", "Sign in to continue.", "Sign in"];
 }
 
@@ -53,21 +54,18 @@ async function submit(event, mode) {
   const button = event.currentTarget.querySelector("button");
   button.disabled = true;
   try {
+    if (mode === "login") {
+      await startLogin(new URLSearchParams(location.search).get("returnTo") || "/");
+      return;
+    }
     const response = mode === "activate"
       ? await blocks.auth.activate(request)
       : mode === "signup"
         ? await blocks.auth.signup(request)
         : mode === "recover"
           ? await blocks.auth.recover(request)
-          : mode === "reset"
-            ? await blocks.auth.resetPassword(request)
-            : await blocks.auth.login(request);
+          : await blocks.auth.resetPassword(request);
     if (response?.error || response?.error_description || response?.isSuccess === false) throw response;
-    if (mode === "login") {
-      setSession(response);
-      location.href = "/";
-      return;
-    }
     message.textContent = apiResponseMessage(response, "Request completed successfully.");
     if (mode === "activate") {
       event.currentTarget.remove();
@@ -85,6 +83,18 @@ function escapeAttribute(value) {
 
 async function initialize() {
   const mode = resolveMode();
+  if (mode === "callback") {
+    content.innerHTML = "<h1>Completing sign in</h1><p>Please wait while CompliTrack verifies your secure session.</p>";
+    try {
+      const returnTo = await completeLogin(location.href);
+      location.replace(returnTo);
+    } catch (error) {
+      content.innerHTML = '<h1>Sign in failed</h1><p>Your session could not be established.</p><div class="auth-links"><button data-mode="login">Try again</button></div>';
+      message.textContent = apiErrorMessage(error);
+      content.querySelector("[data-mode='login']").onclick = () => { location.href = "/login"; };
+    }
+    return;
+  }
   if (mode === "activate" && query.get("code")) {
     content.innerHTML = "<h1>Activate your account</h1><p>Validating your activation link…</p>";
     try {
