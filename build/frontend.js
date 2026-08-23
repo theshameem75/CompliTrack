@@ -133,7 +133,13 @@ async function route() {
     reports: renderReports,
     settings: renderSettings,
   };
-  await (routes[routeName] || renderDashboard)();
+  const renderer = routes[routeName] || renderDashboard;
+  try {
+    await renderer();
+  } catch (error) {
+    console.error(error);
+    renderError(routeName.replace(/(^|-)\w/g, (value) => value.toUpperCase()), error);
+  }
 }
 
 async function renderDashboard() {
@@ -344,7 +350,11 @@ async function renderCertificates() {
 async function renderPeople() {
   try {
     const result = await blocks.iam.users.list({ pageNo: 1, pageSize: 100 });
-    const users = result?.data || [];
+    const users = Array.isArray(result)
+      ? result
+      : Array.isArray(result?.data)
+        ? result.data
+        : result?.users || result?.data?.users || result?.items || result?.data?.items || [];
     content.innerHTML =
       page("People", "Employees and their compliance access state.") +
       (users.length

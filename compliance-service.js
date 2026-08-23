@@ -1,19 +1,76 @@
 import { blocks } from "./blocks-client.js";
 import { apiResponseMessage } from "./api-response.js";
 
+const fields = {
+  Course: ["organizationId", "createdAt", "updatedAt", "name", "code", "localizedNameKey", "description", "category", "trainingType", "provider", "department", "requiredRoles", "supportedLanguages", "durationMinutes", "validityDays", "isMandatory", "managerVerificationRequired", "renewalCourseId", "certificateTemplateId", "isActive"],
+  CourseRequirement: ["organizationId", "courseId", "ruleType", "attribute", "operator", "values", "effectiveFrom", "effectiveUntil", "isActive", "createdAt", "updatedAt"],
+  CourseAssignment: ["organizationId", "createdAt", "updatedAt", "courseId", "employeeId", "assignedBy", "sourceRole", "assignmentSource", "status", "isActive", "assignedAt", "startedAt", "completedAt", "dueAt", "cancellationReason", "lastReminderAt"],
+  Completion: ["organizationId", "createdAt", "updatedAt", "assignmentId", "courseId", "employeeId", "completedAt", "completionMethod", "evidenceFileId", "score", "passed", "trainerId", "notes", "verificationStatus", "verifiedBy", "verifiedAt", "rejectionReason"],
+  Verification: ["organizationId", "completionId", "assignmentId", "employeeId", "verifierId", "status", "comments", "verifiedAt", "createdAt", "updatedAt"],
+  Certificate: ["organizationId", "createdAt", "updatedAt", "completionId", "employeeId", "courseId", "certificateNumber", "issuedAt", "issuedBy", "expiresAt", "status", "pdfFileId", "templateId", "verificationCode", "sentReminderDays", "revokedAt", "revokedReason"],
+  ComplianceStatus: ["organizationId", "employeeId", "status", "score", "requiredCount", "validCount", "graceEndsAt", "evaluatedAt", "createdAt", "updatedAt"],
+  ComplianceHistory: ["organizationId", "employeeId", "previousStatus", "newStatus", "previousScore", "newScore", "reason", "correlationId", "occurredAt", "createdAt"],
+  AccessRestriction: ["organizationId", "employeeId", "status", "reason", "originalRoles", "restrictedRoleSlug", "restrictedAt", "restoredAt", "correlationId", "createdAt", "updatedAt"],
+  ComplianceNotification: ["organizationId", "recipientId", "eventType", "entityType", "entityId", "channel", "status", "deduplicationKey", "scheduledAt", "sentAt", "failureReason", "createdAt", "updatedAt"],
+  ComplianceOrgSettings: ["organizationId", "createdAt", "updatedAt", "gracePeriodDays", "autoAssignOnRoleChange", "managerVerificationRequired", "autoRestrictNonCompliant", "autoRestoreAccess", "reminderDays", "defaultLocale", "restrictedRoleSlug"],
+  ComplianceAuditEvent: ["organizationId", "createdAt", "updatedAt", "actorId", "action", "entityType", "entityId", "metadata", "occurredAt"],
+};
+
+const collection = (name) => blocks.data.collection(name, { fields: fields[name] });
+
+async function listIrregular(name, candidates, options = {}) {
+  const selectedFields = ["ItemId", ...fields[name]].join("\n        ");
+  const input = {
+    pageNo: options.pageNo ?? 1,
+    pageSize: options.pageSize ?? 20,
+    filter: options.filter && (typeof options.filter === "string" ? options.filter : JSON.stringify(options.filter)),
+    sort: options.sort && (typeof options.sort === "string" ? options.sort : JSON.stringify(options.sort)),
+  };
+  let lastResult;
+  for (const field of candidates) {
+    try {
+      const result = await blocks.data.graphql({
+        operationName: field,
+        query: `query ${field}($input: DynamicQueryInput) {
+  ${field}(input: $input) {
+    items {
+        ${selectedFields}
+    }
+    totalCount
+  }
+}`,
+        variables: { input },
+      });
+      lastResult = result;
+      const messages = (result?.errors || []).map((error) => error.message || "");
+      if (!messages.some((value) => value.includes(`Field \`${field}\` does not exist`))) return result;
+    } catch (error) {
+      const messages = (error?.body?.errors || []).map((item) => item.message || "");
+      if (!messages.some((value) => value.includes(`Field \`${field}\` does not exist`))) throw error;
+      lastResult = error.body;
+    }
+  }
+  return lastResult;
+}
+
+const irregularCollection = (name, candidates) => ({
+  ...collection(name),
+  list: (options) => listIrregular(name, candidates, options),
+});
+
 const data = Object.freeze({
-  courses: blocks.data.collection("Course"),
-  requirements: blocks.data.collection("CourseRequirement"),
-  assignments: blocks.data.collection("CourseAssignment"),
-  completions: blocks.data.collection("Completion"),
-  verifications: blocks.data.collection("Verification"),
-  certificates: blocks.data.collection("Certificate"),
-  complianceStatuses: blocks.data.collection("ComplianceStatus"),
-  complianceHistory: blocks.data.collection("ComplianceHistory"),
-  accessRestrictions: blocks.data.collection("AccessRestriction"),
-  notifications: blocks.data.collection("ComplianceNotification"),
-  settings: blocks.data.collection("ComplianceOrgSettings"),
-  audit: blocks.data.collection("ComplianceAuditEvent"),
+  courses: collection("Course"),
+  requirements: collection("CourseRequirement"),
+  assignments: collection("CourseAssignment"),
+  completions: collection("Completion"),
+  verifications: collection("Verification"),
+  certificates: collection("Certificate"),
+  complianceStatuses: irregularCollection("ComplianceStatus", ["getComplianceStatuses", "getComplianceStatus"]),
+  complianceHistory: irregularCollection("ComplianceHistory", ["getComplianceHistories", "getComplianceHistory"]),
+  accessRestrictions: collection("AccessRestriction"),
+  notifications: collection("ComplianceNotification"),
+  settings: irregularCollection("ComplianceOrgSettings", ["getComplianceOrgSettings", "getComplianceOrgSettingses"]),
+  audit: collection("ComplianceAuditEvent"),
 });
 const nowIso = () => new Date().toISOString();
 let latestApiMessage = "";
@@ -33,9 +90,35 @@ export function consumeApiMessage(fallback) {
 }
 const unwrap = (result) => {
   result = checked(result);
-  return result?.items || result?.data?.items || result?.data || result || [];
+  const findItems = (value) => {
+    if (Array.isArray(value)) return value;
+    if (!value || typeof value !== "object") return undefined;
+    if (Array.isArray(value.items)) return value.items;
+    for (const child of Object.values(value)) {
+      const items = findItems(child);
+      if (items) return items;
+    }
+  };
+  return findItems(result) || [];
 };
-const itemId = (item) => item?.itemId || item?.ItemId || item?.id;
+const itemId = (item) => {
+  if (!item || typeof item !== "object") return undefined;
+  const direct = item.itemId || item.ItemId || item.id;
+  if (direct) return direct;
+  for (const value of Object.values(item)) {
+    const nested = itemId(value);
+    if (nested) return nested;
+  }
+};
+
+async function optionalList(request, label) {
+  try {
+    return unwrap(await request);
+  } catch (error) {
+    console.warn(`${label} is unavailable for the current user`, error);
+    return [];
+  }
+}
 
 async function audit(
   organizationId,
@@ -66,16 +149,16 @@ export async function loadDashboard() {
       data.assignments.list({ pageNo: 1, pageSize: 100 }),
       data.completions.list({ pageNo: 1, pageSize: 100 }),
       data.certificates.list({ pageNo: 1, pageSize: 100 }),
-      data.settings.list({ pageNo: 1, pageSize: 10 }),
-      data.complianceStatuses.list({ pageNo: 1, pageSize: 200 }),
+      optionalList(data.settings.list({ pageNo: 1, pageSize: 10 }), "Organization settings"),
+      optionalList(data.complianceStatuses.list({ pageNo: 1, pageSize: 200 }), "Compliance status"),
     ]);
   return {
     courses: unwrap(courses),
     assignments: unwrap(assignments),
     completions: unwrap(completions),
     certificates: unwrap(certificates),
-    settings: unwrap(settings),
-    complianceStatuses: unwrap(complianceStatuses),
+    settings: Array.isArray(settings) ? settings : unwrap(settings),
+    complianceStatuses: Array.isArray(complianceStatuses) ? complianceStatuses : unwrap(complianceStatuses),
   };
 }
 
