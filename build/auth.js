@@ -4,6 +4,8 @@ import { apiErrorMessage, apiResponseMessage } from "./api-response.js";
 const content = document.querySelector("#authContent");
 const message = document.querySelector("#authMessage");
 const query = new URLSearchParams(location.search);
+const activationCode = () =>
+  query.get("activationCode") || query.get("code") || "";
 
 function resolveMode() {
   if (location.pathname === "/login/callback") return "callback";
@@ -14,7 +16,7 @@ function resolveMode() {
 }
 
 function fields(mode) {
-  if (mode === "activate") return `<input name="code" type="hidden" value="${escapeAttribute(query.get("code") || "")}"><label>First name</label><input name="firstName" autocomplete="given-name" required placeholder="Your first name"><label>Last name</label><input name="lastName" autocomplete="family-name" required placeholder="Your last name"><label>New password</label><input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"><label>Confirm password</label><input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter the password again">`;
+  if (mode === "activate") return `<input name="activationCode" type="hidden" value="${escapeAttribute(activationCode())}"><label>First name</label><input name="firstName" autocomplete="given-name" required placeholder="Your first name"><label>Last name</label><input name="lastName" autocomplete="family-name" required placeholder="Your last name"><label>New password</label><input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"><label>Confirm password</label><input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter the password again">`;
   if (mode === "signup") return '<label>Full name</label><input name="name" required placeholder="Jordan Davis"><label>Work email</label><input name="email" type="email" required placeholder="you@company.com"><label>Password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">';
   if (mode === "reset") return `<label>Email</label><input name="email" type="email" required placeholder="you@company.com"><label>Reset token</label><input name="token" required value="${escapeAttribute(query.get("token") || query.get("code") || "")}" placeholder="Token from your email"><label>New password</label><input name="password" type="password" required minlength="8" placeholder="At least 8 characters">`;
   if (mode === "recover") return '<label>Email</label><input name="email" type="email" required placeholder="you@company.com">';
@@ -33,7 +35,7 @@ function copy(mode) {
 
 function render(mode) {
   const [title, description, button] = copy(mode);
-  const codeMissing = mode === "activate" && !query.get("code");
+  const codeMissing = mode === "activate" && !activationCode();
   content.innerHTML = `<h1>${title}</h1><p>${description}</p><form>${fields(mode)}<button ${codeMissing ? "disabled" : ""}>${button}</button></form><div class="auth-links">${mode === "login" ? '<button data-mode="signup">Create account</button><button data-mode="recover">Forgot password?</button>' : '<button data-mode="login">Back to sign in</button>'}</div>`;
   if (codeMissing) message.textContent = "This activation link is missing its activation code.";
   content.querySelector("form").addEventListener("submit", (event) => submit(event, mode));
@@ -58,8 +60,12 @@ async function submit(event, mode) {
       await startLogin(new URLSearchParams(location.search).get("returnTo") || "/");
       return;
     }
+    const activationRequest = mode === "activate"
+      ? { ...request, code: request.activationCode }
+      : null;
+    if (activationRequest) delete activationRequest.activationCode;
     const response = mode === "activate"
-      ? await blocks.auth.activate(request)
+      ? await blocks.auth.activate(activationRequest)
       : mode === "signup"
         ? await blocks.auth.signup(request)
         : mode === "recover"
@@ -95,10 +101,12 @@ async function initialize() {
     }
     return;
   }
-  if (mode === "activate" && query.get("code")) {
+  if (mode === "activate" && activationCode()) {
     content.innerHTML = "<h1>Activate your account</h1><p>Validating your activation link…</p>";
     try {
-      const validation = await blocks.auth.validateActivation({ code: query.get("code") });
+      const validation = await blocks.auth.validateActivation({
+        activationCode: activationCode(),
+      });
       if (validation?.error || validation?.error_description || validation?.isSuccess === false || validation?.valid === false) throw validation;
     } catch (error) {
       content.innerHTML = '<h1>Activation link unavailable</h1><p>This activation link is invalid or has expired.</p><div class="auth-links"><button data-mode="login">Back to sign in</button></div>';

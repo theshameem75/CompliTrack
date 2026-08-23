@@ -1,6 +1,7 @@
 import {
   blocks,
   ensureSession,
+  logout as endSession,
 } from "./blocks-client.js";
 import * as api from "./compliance-service.js";
 import { apiErrorMessage, apiResponseMessage } from "./api-response.js";
@@ -108,9 +109,7 @@ function bindShell() {
 }
 
 async function logout() {
-  try {
-    await blocks.auth.logout();
-  } catch {}
+  await endSession().catch(() => undefined);
   location.href = "/login";
 }
 

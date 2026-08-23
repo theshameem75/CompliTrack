@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import selfsigned from "selfsigned";
 
-const domain = process.argv[2] || "dbgmze.dev.slsblx.com";
+const domain = process.argv[2] || "dbgmze.slsblx.com";
 mkdirSync(".cert", { recursive: true });
 
 const pems = selfsigned.generate([{ name: "commonName", value: domain }], {
