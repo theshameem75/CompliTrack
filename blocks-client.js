@@ -3,6 +3,7 @@ import { createBlocksClient } from "/vendor/blocks-client/index.js";
 const RETURN_TO_KEY = "complitrack.returnTo";
 const ACCESS_TOKEN_KEY = "complitrack.accessToken";
 const REFRESH_TOKEN_KEY = "complitrack.refreshToken";
+const LOGIN_CALLBACK_TIMEOUT_MS = 15_000;
 let cachedAccessToken;
 let cachedRefreshToken;
 let refreshInFlight;
@@ -100,8 +101,16 @@ export function startLogin(returnTo = "/") {
 
 export async function completeLogin(callbackUrl) {
   const returnTo = sessionStorage.getItem(RETURN_TO_KEY) || "/";
-  sessionStorage.removeItem(RETURN_TO_KEY);
-  const response = await blocks.auth.idp.callback(callbackUrl);
+  const timeout = new Promise((_, reject) => {
+    setTimeout(
+      () => reject(new Error("The sign-in service did not respond. Check the browser console for a CORS or network error, then try again.")),
+      LOGIN_CALLBACK_TIMEOUT_MS,
+    );
+  });
+  const response = await Promise.race([
+    blocks.auth.idp.callback(callbackUrl),
+    timeout,
+  ]);
   const data = response?.data || response;
   if (data?.error || data?.error_description || data?.isSuccess === false) {
     throw data;
@@ -112,6 +121,7 @@ export async function completeLogin(callbackUrl) {
   } else if (!(await blocks.auth.isAuthenticated())) {
     throw new Error("Login completed, but no secure browser session was established.");
   }
+  sessionStorage.removeItem(RETURN_TO_KEY);
   return returnTo;
 }
 
