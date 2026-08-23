@@ -4,6 +4,13 @@ const RETURN_TO_KEY = "complitrack.returnTo";
 const ACCESS_TOKEN_KEY = "complitrack.accessToken";
 const REFRESH_TOKEN_KEY = "complitrack.refreshToken";
 const LOGIN_CALLBACK_TIMEOUT_MS = 15_000;
+const AUTH_PATHS = new Set([
+  "/activate",
+  "/recover",
+  "/reset-password",
+  "/login",
+  "/login/callback",
+]);
 let cachedAccessToken;
 let cachedRefreshToken;
 let refreshInFlight;
@@ -94,13 +101,19 @@ export async function ensureSession() {
   return blocks.auth.isAuthenticated();
 }
 
+function safeReturnTo(returnTo) {
+  if (!returnTo?.startsWith("/") || returnTo.startsWith("//")) return "/";
+  const pathname = returnTo.split(/[?#]/, 1)[0];
+  return AUTH_PATHS.has(pathname) ? "/" : returnTo;
+}
+
 export function startLogin(returnTo = "/") {
-  sessionStorage.setItem(RETURN_TO_KEY, returnTo);
+  sessionStorage.setItem(RETURN_TO_KEY, safeReturnTo(returnTo));
   return blocks.auth.idp.redirectToProvider();
 }
 
 export async function completeLogin(callbackUrl) {
-  const returnTo = sessionStorage.getItem(RETURN_TO_KEY) || "/";
+  const returnTo = safeReturnTo(sessionStorage.getItem(RETURN_TO_KEY) || "/");
   const timeout = new Promise((_, reject) => {
     setTimeout(
       () => reject(new Error("The sign-in service did not respond. Check the browser console for a CORS or network error, then try again.")),
