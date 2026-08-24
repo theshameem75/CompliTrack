@@ -7,7 +7,7 @@ const root = fs.existsSync(path.join(__dirname, "build"))
   ? path.join(__dirname, "build")
   : __dirname;
 const useHttps = process.argv.includes("--https");
-const port = Number(process.env.PORT || (useHttps ? 5173 : 4173));
+const port = Number(process.env.PORT || (useHttps ? 5174 : 4173));
 const devHost = "dbgmze.slsblx.com";
 const types = {
   ".html": "text/html; charset=utf-8",

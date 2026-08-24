@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 98%;
+    --foreground: 20 16% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 16% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 16% 13%;
+    --primary-hex: #a55b41;
+    --primary: 15.6 43.478% 45.098%;
+    --primary-foreground: 30 33% 98%;
+    --secondary: 24 18% 94%;
+    --secondary-foreground: 20 17% 20%;
+    --muted: 25 16% 95%;
+    --muted-foreground: 20 7% 43%;
+    --accent: 18 33% 92%;
+    --accent-foreground: 15 44% 34%;
+    --destructive: 0 66% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 24 14% 88%;
+    --input: 24 14% 86%;
+    --ring: 15.6 43.478% 45.098%;
+    --radius: 0.75rem;
+  }
+
+  * { @apply border-border; }
+  html { @apply bg-background; }
+  body { @apply min-h-screen bg-background font-sans text-foreground antialiased; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+}
+
+@layer components {
+  .page-grid { grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.8fr); }
+  .field { @apply grid gap-2; }
+  .native-select { @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-ring; }
+  .check-row { @apply flex items-center gap-3 rounded-lg border bg-muted/25 px-3 py-3 text-sm; }
+  .check-row input { accent-color: var(--primary-hex); }
+}
+
+@media (max-width: 1100px) {
+  .page-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .desktop-sidebar { display: none; }
+}

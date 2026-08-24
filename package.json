@@ -5,17 +5,38 @@
   "description": "Training and certification compliance workspace",
   "type": "module",
   "scripts": {
-    "start": "node server.cjs",
-    "dev": "node build.cjs && node server.cjs --https",
+    "start": "vite preview --host 0.0.0.0 --port 4173",
+    "dev": "vite --host 0.0.0.0",
     "cert": "node scripts/generate-cert.mjs",
-    "build": "node build.cjs",
-    "build:dev": "node build.cjs",
-    "build:prod": "node build.cjs",
-    "test": "node --check app.js && node --check api-response.js && node --check auth.js && node --check blocks-client.js && node --check compliance-service.js && node --check frontend.js && node --check src/compliance-domain.js && node --test src/compliance-domain.test.js"
+    "build": "tsc -b && vite build",
+    "build:dev": "tsc -b && vite build --mode development",
+    "build:prod": "tsc -b && vite build --mode production",
+    "typecheck": "tsc -b",
+    "test": "node --check api-response.js && node --check blocks-client.js && node --check compliance-service.js && node --check src/compliance-domain.js && node --test src/compliance-domain.test.js"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@seliseblocks/cli-os": "^0.2.4",
     "@seliseblocks/client": "^0.1.6",
-    "selfsigned": "^2.4.1"
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "selfsigned": "^2.4.1",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^5.0.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3"
   }
 }

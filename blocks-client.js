@@ -1,4 +1,4 @@
-import { createBlocksClient } from "/vendor/blocks-client/index.js";
+import { createBlocksClient } from "@seliseblocks/client";
 
 const RETURN_TO_KEY = "complitrack.returnTo";
 const ACCESS_TOKEN_KEY = "complitrack.accessToken";
