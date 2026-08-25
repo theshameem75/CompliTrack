@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN npm ci
 
 COPY . .
 
@@ -29,8 +29,7 @@ ENV VITE_BLOCKS_OIDC_SCOPE=${VITE_BLOCKS_OIDC_SCOPE}
 ENV VITE_BLOCKS_REDIRECT_URI=${VITE_BLOCKS_REDIRECT_URI}
 ENV VITE_BLOCKS_HOSTED_LOGIN=${VITE_BLOCKS_HOSTED_LOGIN}
 
-RUN NODE_OPTIONS="--max-old-space-size=4096" npx vite build --mode "${ci_build}" \
-  && node scripts/write-release-env.mjs "${ci_build}"
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build:${ci_build}
 
 FROM nginxinc/nginx-unprivileged:1.29-alpine
 
