@@ -1,4 +1,4 @@
-import { PanelLeft, ShieldCheck } from "lucide-react";
+import { PanelLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { navItems } from "./navItems";
@@ -42,7 +42,7 @@ export function AppShell({ activePath, children, onNavigate }: { activePath: str
         <div className="sidebar-header">
           {collapsed ? null : (
             <a className="brand" href="/" onClick={(event) => { event.preventDefault(); onNavigate("/"); }}>
-              <span className="brand-mark"><ShieldCheck size={16} /></span>
+              <span className="brand-mark"><img src="/complitrack-logo.svg" alt="" /></span>
               <span>CompliTrack</span>
             </a>
           )}

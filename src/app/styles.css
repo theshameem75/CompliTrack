@@ -2,60 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Blocks design tokens (HSL channels, matches @seliseblocks/blocks-kit) */
+/* Solar Dusk-inspired earth palette. Primary is exactly #a55b41. */
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --popover: 0 0% 100%;
-  --primary: 218 78% 32%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --high-emphasis: 0 0% 15%;
-  --low-emphasis: 0 0% 45%;
-  --success-bg: 146 63% 92%;
-  --success-fg: 146 64% 27%;
-  --warning-bg: 45 100% 92%;
-  --warning-fg: 33 92% 34%;
-  --avatar-surface: #c0c9d1;
-  --avatar-text: #262626;
-  --radius: 0.5rem;
+  --primary-color: #a55b41;
+  --background: 42 42% 95%;
+  --foreground: 22 26% 19%;
+  --card: 40 50% 98%;
+  --popover: 40 50% 98%;
+  --primary: 15.6 43.48% 45.1%;
+  --primary-foreground: 40 52% 96%;
+  --secondary: 35 39% 87%;
+  --muted: 38 35% 91%;
+  --muted-foreground: 22 15% 41%;
+  --accent: 34 57% 61%;
+  --accent-foreground: 22 34% 17%;
+  --destructive: 2 57% 43%;
+  --destructive-foreground: 40 52% 96%;
+  --border: 32 27% 80%;
+  --high-emphasis: 22 28% 17%;
+  --low-emphasis: 22 15% 42%;
+  --success-bg: 102 22% 88%;
+  --success-fg: 112 23% 34%;
+  --warning-bg: 38 62% 88%;
+  --warning-fg: 29 64% 35%;
+  --earth-deep: 22 23% 14%;
+  --earth-copper: 16 43% 45%;
+  --earth-amber: 34 57% 61%;
+  --earth-sage: 106 18% 43%;
+  --avatar-surface: #d7c2a8;
+  --avatar-text: #3d2c24;
+  --radius: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --popover: 222.2 84% 4.9%;
-    --primary: 218 75% 45%;
-    --primary-foreground: 0 0% 96%;
-    --secondary: 217.2 32.6% 17.5%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --high-emphasis: 0 0% 96%;
-    --low-emphasis: 0 0% 62%;
-    --success-bg: 146 40% 16%;
-    --success-fg: 146 60% 75%;
-    --warning-bg: 40 50% 18%;
-    --warning-fg: 43 90% 70%;
+    --background: 24 20% 10%;
+    --foreground: 39 43% 91%;
+    --card: 25 21% 14%;
+    --popover: 25 21% 14%;
+    --primary: 15.6 43.48% 45.1%;
+    --primary-foreground: 40 52% 96%;
+    --secondary: 25 22% 20%;
+    --muted: 24 20% 18%;
+    --muted-foreground: 31 19% 66%;
+    --accent: 34 52% 55%;
+    --accent-foreground: 24 28% 12%;
+    --destructive: 2 48% 46%;
+    --destructive-foreground: 40 52% 96%;
+    --border: 25 20% 25%;
+    --high-emphasis: 39 43% 92%;
+    --low-emphasis: 31 18% 66%;
+    --success-bg: 108 20% 18%;
+    --success-fg: 102 30% 70%;
+    --warning-bg: 32 32% 18%;
+    --warning-fg: 36 68% 69%;
   }
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; }
+body { background: hsl(var(--background)); margin: 0; }
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; font: inherit; }
 :root { background: hsl(var(--background)); color: hsl(var(--foreground)); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
@@ -73,7 +78,8 @@ aside { background: hsl(var(--background)); border-right: 1px solid hsl(var(--bo
 aside.collapsed { flex-basis: 56px; width: 56px; }
 .sidebar-header { align-items: center; border-bottom: 1px solid hsl(var(--border)); display: flex; flex-shrink: 0; height: 60px; justify-content: space-between; padding: 0 12px; }
 .sidebar-header .brand { align-items: center; display: flex; font-weight: 700; gap: 10px; overflow: hidden; }
-.brand-mark { align-items: center; background: hsl(var(--primary)); border-radius: 8px; color: hsl(var(--primary-foreground)); display: grid; flex-shrink: 0; height: 30px; place-items: center; width: 30px; }
+.brand-mark { align-items: center; background: transparent; border-radius: 9px; color: hsl(var(--primary-foreground)); display: grid; flex-shrink: 0; height: 32px; place-items: center; width: 32px; }
+.brand-mark img { display: block; height: 32px; width: 32px; }
 aside.collapsed .sidebar-header { justify-content: center; padding: 0; }
 
 nav { display: grid; gap: 2px; overflow-x: hidden; overflow-y: auto; padding: 8px; }
@@ -123,13 +129,13 @@ section { margin: 0 auto; max-width: 1100px; width: 100%; }
 .section-band h3 { margin: 0; }
 .section-band p { color: hsl(var(--foreground)); margin: 10px 0 0; }
 
-.hero-panel { align-items: center; background: linear-gradient(125deg, hsl(var(--primary)), hsl(222 75% 18%)); border-radius: 18px; color: white; display: flex; justify-content: space-between; margin-bottom: 16px; overflow: hidden; padding: 24px 28px; }
+.hero-panel { align-items: center; background: linear-gradient(125deg, hsl(var(--primary)), hsl(var(--earth-deep))); border-radius: 18px; color: white; display: flex; justify-content: space-between; margin-bottom: 16px; overflow: hidden; padding: 24px 28px; }
 .hero-panel > div:first-child { display: grid; gap: 6px; }
 .hero-panel .eyebrow { color: hsl(210 40% 90%); }
 .hero-panel strong { font-size: 44px; line-height: 1; }
 .hero-panel p { color: hsl(210 40% 88%); margin: 4px 0 0; }
 .score-ring { background: conic-gradient(hsl(148 65% 55%) var(--score), rgba(255,255,255,.16) 0); border-radius: 999px; display: grid; height: 96px; place-items: center; position: relative; width: 96px; }
-.score-ring::after { background: hsl(222 75% 18%); border-radius: inherit; content: ""; inset: 8px; position: absolute; }
+.score-ring::after { background: hsl(var(--earth-deep)); border-radius: inherit; content: ""; inset: 8px; position: absolute; }
 .score-ring span { font-size: 24px; font-weight: 800; position: relative; z-index: 1; }
 .bar-row { align-items: center; display: grid; font-size: 13px; gap: 10px; grid-template-columns: 135px 1fr 24px; }
 .mini-bar { background: hsl(var(--secondary)); border-radius: 999px; height: 7px; overflow: hidden; }
@@ -182,13 +188,71 @@ pre { background: hsl(var(--foreground)); border-radius: var(--radius); color: h
 
 @keyframes blocks-menu-in { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-/* Auth screens: login + callback */
-.auth-screen { align-items: center; background: linear-gradient(160deg, hsl(var(--secondary)), hsl(var(--background))); display: flex; justify-content: center; min-height: 100vh; padding: 24px; }
-.auth-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.1); display: grid; gap: 14px; max-width: 380px; padding: 32px; width: 100%; }
-.auth-brand { align-items: center; display: flex; font-weight: 700; gap: 10px; }
-.auth-card h2 { font-size: 22px; margin: 0; }
-.auth-card > p { color: hsl(var(--muted-foreground)); margin: 0; }
-.auth-submit { justify-content: center; width: 100%; }
+/* Futuristic Solar Dusk login */
+.auth-screen { background: hsl(var(--earth-deep)); display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(420px, .88fr); max-width: 100vw; min-height: 100svh; overflow: hidden; width: 100%; }
+.auth-visual { background: radial-gradient(circle at 73% 22%, hsl(var(--earth-copper) / .28), transparent 29%), linear-gradient(145deg, #211a17 0%, #2b201b 52%, #191512 100%); color: #f5ead8; display: flex; flex-direction: column; isolation: isolate; margin: 0; max-width: none; min-height: 100svh; min-width: 0; overflow: hidden; padding: 34px 42px; position: relative; }
+.auth-grid { background-image: linear-gradient(hsl(var(--earth-amber) / .07) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--earth-amber) / .07) 1px, transparent 1px); background-size: 42px 42px; inset: 0; mask-image: linear-gradient(to bottom right, black, transparent 80%); position: absolute; z-index: -2; }
+.auth-grid::after { animation: auth-scan 7s linear infinite; background: linear-gradient(180deg, transparent, hsl(var(--earth-amber) / .16), transparent); content: ""; height: 22%; left: 0; position: absolute; right: 0; top: -24%; }
+.auth-orbit { border: 1px solid hsl(var(--earth-amber) / .16); border-radius: 999px; position: absolute; z-index: -1; }
+.auth-orbit::after { background: hsl(var(--earth-amber)); border-radius: 50%; box-shadow: 0 0 22px hsl(var(--earth-amber) / .8); content: ""; height: 6px; left: 20%; position: absolute; top: 1%; width: 6px; }
+.auth-orbit-one { height: 420px; right: -155px; top: 8%; width: 420px; }
+.auth-orbit-two { bottom: -220px; height: 560px; left: -240px; transform: rotate(58deg); width: 560px; }
+.auth-visual-header, .auth-visual-footer { align-items: center; display: flex; justify-content: space-between; position: relative; z-index: 2; }
+.auth-wordmark, .auth-mobile-brand { align-items: center; display: inline-flex; font-size: 15px; font-weight: 800; gap: 11px; letter-spacing: -.01em; }
+.auth-wordmark img, .auth-mobile-brand img { height: 36px; width: 36px; }
+.system-online { align-items: center; border: 1px solid rgba(245,234,216,.14); border-radius: 999px; color: rgba(245,234,216,.7); display: inline-flex; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; gap: 8px; letter-spacing: .08em; padding: 8px 11px; text-transform: uppercase; }
+.system-online i { animation: status-pulse 2s ease infinite; background: #91a879; border-radius: 50%; box-shadow: 0 0 0 4px rgba(145,168,121,.12); height: 6px; width: 6px; }
+.ascii-stage { align-items: flex-start; display: flex; flex: 1; flex-direction: column; justify-content: center; margin: auto; max-width: 700px; width: 100%; }
+.ascii-kicker { align-items: center; color: #d9a866; display: flex; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; gap: 8px; letter-spacing: .14em; margin-bottom: 22px; text-transform: uppercase; }
+.ascii-logo { background: transparent; border: 0; border-radius: 0; color: #f2dfc1; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: clamp(8px, 1.12vw, 15px); font-weight: 700; line-height: 1.28; margin: 0; overflow: visible; padding: 0; text-shadow: 0 0 26px hsl(var(--earth-amber) / .24); white-space: pre; }
+.ascii-stage > p { color: rgba(245,234,216,.6); font-size: clamp(14px, 1.35vw, 18px); line-height: 1.55; margin: 28px 0 0; max-width: 460px; }
+.auth-visual-footer { color: rgba(245,234,216,.45); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.auth-visual-footer span { align-items: center; display: inline-flex; gap: 7px; }
+.auth-access { align-items: center; background: radial-gradient(circle at 20% 8%, hsl(var(--earth-amber) / .12), transparent 28%), hsl(var(--background)); display: flex; justify-content: center; margin: 0; max-width: none; min-height: 100svh; min-width: 0; overflow: hidden; padding: 48px clamp(28px, 6vw, 84px); position: relative; }
+.auth-access::before { background: hsl(var(--primary)); content: ""; height: 88px; position: absolute; right: 0; top: 0; width: 3px; }
+.auth-access-inner { max-width: 460px; min-width: 0; width: 100%; }
+.auth-mobile-brand { display: none; }
+.auth-card { display: grid; gap: 24px; width: 100%; }
+.auth-card-status { align-items: center; color: hsl(var(--primary)); display: inline-flex; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; font-weight: 800; gap: 8px; letter-spacing: .12em; text-transform: uppercase; }
+.auth-heading { display: grid; gap: 10px; }
+.auth-heading h1 { color: hsl(var(--foreground)); font-size: clamp(36px, 4vw, 54px); letter-spacing: -.045em; line-height: 1.02; margin: 0; max-width: 440px; overflow-wrap: anywhere; }
+.auth-heading p { color: hsl(var(--muted-foreground)); font-size: 15px; line-height: 1.65; margin: 0; max-width: 420px; }
+.auth-trust-row { border-bottom: 1px solid hsl(var(--border)); border-top: 1px solid hsl(var(--border)); display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 16px 0; }
+.auth-trust-row span { align-items: center; color: hsl(var(--muted-foreground)); display: inline-flex; font-size: 11px; font-weight: 700; gap: 6px; text-transform: uppercase; }
+.auth-trust-row svg { color: hsl(var(--earth-sage)); }
+.auth-submit { border-radius: 10px; box-shadow: 0 12px 28px hsl(var(--primary) / .22); justify-content: space-between; min-height: 54px; padding: 0 19px; width: 100%; }
+.auth-submit:hover:not(:disabled) { background: hsl(15.6 43.48% 40%); box-shadow: 0 15px 34px hsl(var(--primary) / .3); transform: translateY(-1px); }
+.auth-submit svg { transition: transform .2s ease; }
+.auth-submit:hover:not(:disabled) svg { transform: translateX(3px); }
+.auth-footnote { color: hsl(var(--muted-foreground)); font-size: 11px; line-height: 1.5; margin: -8px 0 0; text-align: center; }
+@keyframes auth-scan { to { transform: translateY(570%); } }
+@keyframes status-pulse { 50% { box-shadow: 0 0 0 7px rgba(145,168,121,0); } }
+
+@media (max-width: 1040px) {
+  .auth-screen { grid-template-columns: 1fr; overflow: auto; }
+  .auth-visual { min-height: 48svh; padding: 26px 32px; }
+  .ascii-stage { padding: 44px 0; }
+  .ascii-logo { font-size: clamp(8px, 1.9vw, 13px); }
+  .auth-access { min-height: 52svh; padding: 56px 30px; }
+}
+
+@media (max-width: 620px) {
+  .auth-visual { min-height: 385px; padding: 22px; }
+  .auth-wordmark img { height: 32px; width: 32px; }
+  .system-online { display: none; }
+  .ascii-stage { padding: 34px 0 28px; }
+  .ascii-logo { font-size: clamp(6px, 2.05vw, 9px); }
+  .ascii-kicker { margin-bottom: 15px; }
+  .ascii-stage > p { font-size: 13px; margin-top: 20px; }
+  .auth-visual-footer span:nth-child(2) { display: none; }
+  .auth-access { min-height: auto; padding: 46px 22px 54px; }
+  .auth-heading h1 { font-size: clamp(31px, 9vw, 36px); }
+  .auth-trust-row { gap: 10px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-grid::after, .system-online i { animation: none; }
+}
 
 /* Alerts */
 .alert { border-radius: 8px; font-size: 13px; line-height: 1.5; padding: 12px 14px; }
