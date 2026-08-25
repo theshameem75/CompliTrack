@@ -1,4 +1,4 @@
-import { CheckCircle2, ClipboardList, Play, Plus, Search, UserRound } from "lucide-react";
+import { CheckCircle2, ClipboardList, Play, Plus, UserRound } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createAssignment, finishAssignment, recordId, sendLifecycleMessage, startAssignment } from "./complianceApi";
@@ -12,6 +12,7 @@ import { DataTable } from "../../shared/ui/DataTable";
 import type { Column } from "../../shared/ui/DataTable";
 import { Modal } from "../../shared/ui/Modal";
 import { SelectMenu } from "../../shared/ui/SelectMenu";
+import { CollectionFilters } from "../../shared/ui/CollectionFilters";
 
 const EMPTY_FORM = { courseId: "", userId: "", userName: "", userEmail: "", role: "employee", department: "" };
 const ROLE_OPTIONS = [
@@ -86,10 +87,17 @@ export function AssignmentsPage() {
   return <section>
     <PageHeader title="Training assignments" subtitle="Track every learner from assignment through certification in one workspace." actions={<button className="primary-button" onClick={() => setShowForm(true)}><Plus size={16} /> Assign course</button>} />
 
-    <div className="toolbar table-toolbar assignment-toolbar">
-      <label className="search-box"><Search size={16} /><input aria-label="Search assignments" placeholder="Search learner, course, role, or department" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
-      <div className="toolbar-actions"><SelectMenu label="Status" options={STATUS_OPTIONS} value={status} onChange={setStatus} /><span className="result-count">{rows.length} result{rows.length === 1 ? "" : "s"}</span></div>
-    </div>
+    <CollectionFilters
+      onClear={() => { setSearch(""); setStatus("all"); }}
+      onSearchChange={setSearch}
+      onStatusChange={setStatus}
+      resultCount={rows.length}
+      resultNoun="assignment"
+      search={search}
+      searchPlaceholder="Search learner, course, role, or department"
+      statusOptions={STATUS_OPTIONS}
+      statusValue={status}
+    />
 
     {rows.length ? <DataTable columns={columns} rows={rows} getRowId={(assignment) => recordId(assignment)} paginated /> : <EmptyState icon={<ClipboardList size={28} />} title={search || status !== "all" ? "No matching assignments" : "No assignments"} description={search || status !== "all" ? "Adjust the search or status filter to see more results." : "Assign a course manually or let role-based assignment create one."} />}
 

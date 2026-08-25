@@ -1,4 +1,4 @@
-import { BookOpenCheck, Clock3, Plus, Search, UsersRound } from "lucide-react";
+import { BookOpenCheck, Clock3, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createCourse, recordId } from "./complianceApi";
@@ -11,6 +11,7 @@ import { DataTable } from "../../shared/ui/DataTable";
 import type { Column } from "../../shared/ui/DataTable";
 import { Modal } from "../../shared/ui/Modal";
 import { MultiSelectMenu } from "../../shared/ui/SelectMenu";
+import { CollectionFilters } from "../../shared/ui/CollectionFilters";
 
 const ROLE_OPTIONS = [
   { label: "Employee", value: "employee" },
@@ -21,12 +22,18 @@ const ROLE_OPTIONS = [
 ];
 
 const EMPTY_FORM = { title: "", code: "", department: "", description: "", durationMinutes: 60, validityDays: 365, targetRoles: ["employee"] };
+const COURSE_STATUS_OPTIONS = [
+  { label: "All statuses", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Draft", value: "draft" }
+];
 
 export function CoursesPage() {
   const { courses } = useComplianceData();
   const refresh = useRefreshCompliance();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
   const [form, setForm] = useState(EMPTY_FORM);
   const create = useMutation({
     mutationFn: () => createCourse({ ...form, certificateTemplate: "standard", isActive: true, localizedLabels: JSON.stringify({ "en-US": form.title }) }),
@@ -38,8 +45,12 @@ export function CoursesPage() {
   });
   const rows = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return (courses.data ?? []).filter((course) => `${course.title} ${course.code} ${course.department} ${(course.targetRoles ?? []).join(" ")}`.toLowerCase().includes(query));
-  }, [courses.data, search]);
+    return (courses.data ?? []).filter((course) => {
+      const matchesSearch = `${course.title} ${course.code} ${course.department} ${(course.targetRoles ?? []).join(" ")}`.toLowerCase().includes(query);
+      const matchesStatus = status === "all" || (status === "active" ? course.isActive : !course.isActive);
+      return matchesSearch && matchesStatus;
+    });
+  }, [courses.data, search, status]);
 
   const columns: Column<Course>[] = [
     { key: "course", header: "Course", render: (course) => <div className="table-primary-cell"><span className="course-icon table-cell-icon"><BookOpenCheck size={18} /></span><span><strong>{course.title}</strong><small>{course.description || "Mandatory compliance training"}</small></span></div> },
@@ -59,12 +70,19 @@ export function CoursesPage() {
   return <section>
     <PageHeader title="Course catalog" subtitle="Create role-based learning programs and keep every certification current." actions={<button className="primary-button" onClick={() => setShowForm(true)}><Plus size={16} /> New course</button>} />
 
-    <div className="toolbar table-toolbar">
-      <label className="search-box"><Search size={16} /><input aria-label="Search courses" placeholder="Search title, code, department, or role" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
-      <span className="toolbar-insight"><UsersRound size={16} /><span><strong>{rows.length}</strong> course{rows.length === 1 ? "" : "s"}<small>Role changes sync automatically</small></span></span>
-    </div>
+    <CollectionFilters
+      onClear={() => { setSearch(""); setStatus("all"); }}
+      onSearchChange={setSearch}
+      onStatusChange={setStatus}
+      resultCount={rows.length}
+      resultNoun="course"
+      search={search}
+      searchPlaceholder="Search title, code, department, or role"
+      statusOptions={COURSE_STATUS_OPTIONS}
+      statusValue={status}
+    />
 
-    {rows.length ? <DataTable columns={columns} rows={rows} getRowId={(course) => recordId(course)} paginated /> : <EmptyState icon={<BookOpenCheck size={28} />} title={search ? "No matching courses" : "No courses yet"} description={search ? "Try a different search term or clear the filter." : "Create the first mandatory course and target it to employee roles."} />}
+    {rows.length ? <DataTable columns={columns} rows={rows} getRowId={(course) => recordId(course)} paginated /> : <EmptyState icon={<BookOpenCheck size={28} />} title={search || status !== "all" ? "No matching courses" : "No courses yet"} description={search || status !== "all" ? "Try a different search term or clear the filters." : "Create the first mandatory course and target it to employee roles."} />}
 
     {showForm ? <Modal onClose={closeForm} title="Create a new course">
       <p>Set up the course details and choose which roles should receive it automatically.</p>
