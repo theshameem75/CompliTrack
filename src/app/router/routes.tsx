@@ -4,6 +4,8 @@ import { RedirectIfAuthenticated, RequireAuth } from "./guards";
 import { CallbackPage } from "../../features/auth/CallbackPage";
 import { ErrorPage } from "../../features/auth/ErrorPage";
 import { LoginPage } from "../../features/auth/LoginPage";
+import { ActivationPage } from "../../features/auth/ActivationPage";
+import { ResetPasswordPage } from "../../features/auth/ResetPasswordPage";
 import { NotFoundPage } from "../../features/auth/NotFoundPage";
 import { DashboardPage } from "../../features/dashboard/DashboardPage";
 import { ProfilePage } from "../../features/profile/ProfilePage";
@@ -46,6 +48,16 @@ export function AppRouter() {
 
   if (path === "/login/callback") {
     return <CallbackPage onNavigate={navigate} />;
+  }
+
+  if (path === "/activate") {
+    const parameters = new URLSearchParams(search);
+    return <ActivationPage code={parameters.get("code") || undefined} language={parameters.get("lang") || undefined} onNavigate={navigate} />;
+  }
+
+  if (path === "/resetpassword") {
+    const parameters = new URLSearchParams(search);
+    return <ResetPasswordPage code={parameters.get("code") || undefined} language={parameters.get("lang") || undefined} onNavigate={navigate} />;
   }
 
   if (path === "/login") {
