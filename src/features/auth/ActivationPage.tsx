@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { blocksClient } from "../../lib/blocks/client";
 import { useT } from "../../lib/i18n/LocalizationProvider";
 import { Alert } from "../../shared/ui/Alert";
+import { LanguageSwitcher } from "../../shared/ui/LanguageSwitcher";
 
 type ActivationStage = "invalid" | "ready" | "success" | "validating";
 
@@ -81,7 +82,7 @@ export function ActivationPage({ code, language, onNavigate }: { code?: string; 
       <div className="activation-grid" aria-hidden="true" />
       <header className="activation-brand-header">
         <a className="auth-wordmark" href="/login"><img src="/complitrack-logo.svg" alt="" /><span>{t("app.name")}</span></a>
-        <span className="activation-invite-badge"><Sparkles size={14} /> {t("activate.invited")}</span>
+        <div className="public-language-actions"><span className="activation-invite-badge"><Sparkles size={14} /> {t("activate.invited")}</span><LanguageSwitcher dark /></div>
       </header>
 
       <div className="activation-story">

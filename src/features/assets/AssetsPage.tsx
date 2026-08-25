@@ -97,19 +97,19 @@ export function AssetsPage() {
 
       {filtersOpen ? <AssetFiltersPanel filters={filters} onChange={setFilters} onClear={() => setFilters({})} /> : null}
 
-      {assets.isError ? <ErrorState message="Could not load assets from Blocks Data." onRetry={() => assets.refetch()} /> : null}
+      {assets.isError ? <ErrorState message={t("assets.loadError")} onRetry={() => assets.refetch()} /> : null}
 
       {assets.isLoading ? <div className="panel">{t("common.loading")}</div> : rows.length > 0 ? <DataTable columns={columns} rows={rows} /> : (
         <EmptyState
           icon={<Boxes size={28} />}
           title={t("assets.empty")}
-          description={activeFilterCount > 0 ? t("assets.filters.empty") : "Add the first Assets collection item to see the table flow."}
+          description={activeFilterCount > 0 ? t("assets.filters.empty") : t("assets.emptyDescription")}
           action={<button className="primary-button" onClick={() => setCreating(true)}><Plus size={16} /> {t("assets.create")}</button>}
         />
       )}
 
       <div className="pagination">
-        <span className="pagination-count">{totalCount} asset(s)</span>
+        <span className="pagination-count">{totalCount} {totalCount === 1 ? t("assets.one") : t("assets.many")}</span>
         <div className="pagination-controls">
           <label className="pagination-size">
             <span>{t("assets.pagination.rows")}</span>
@@ -117,9 +117,9 @@ export function AssetsPage() {
               {PAGE_SIZES.map((size) => <option key={size} value={size}>{size}</option>)}
             </select>
           </label>
-          <button className="icon-button" disabled={page <= 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
-          <span>Page {page} of {pageCount}</span>
-          <button className="icon-button" disabled={page >= pageCount} onClick={() => setPage((value) => value + 1)}>Next</button>
+          <button className="icon-button" disabled={page <= 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>{t("assets.previous")}</button>
+          <span>{t("assets.page")} {page} {t("pagination.of")} {pageCount}</span>
+          <button className="icon-button" disabled={page >= pageCount} onClick={() => setPage((value) => value + 1)}>{t("assets.next")}</button>
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export function AssetsPage() {
       {deleting ? (
         <ConfirmDialog
           title={t("assets.delete.title")}
-          message={`Delete ${String(deleting.name ?? assetId(deleting))}?`}
+          message={`${t("assets.deleteMessage")} ${String(deleting.name ?? assetId(deleting))}?`}
           onCancel={() => setDeleting(undefined)}
           onConfirm={() => remove.mutate(deleting)}
         />

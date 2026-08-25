@@ -1,6 +1,7 @@
 import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { useT } from "../../lib/i18n/LocalizationProvider";
 
 export type Column<T> = { key: string; header: ReactNode; render: (row: T) => ReactNode };
 
@@ -12,6 +13,7 @@ export function DataTable<T>({ columns, getRowId, initialPageSize = 10, pageSize
   paginated?: boolean;
   rows: T[];
 }) {
+  const { t } = useT();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(initialPageSize);
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
@@ -41,19 +43,19 @@ export function DataTable<T>({ columns, getRowId, initialPageSize = 10, pageSize
         </table>
       </div>
       {paginated ? <div className="pagination">
-        <span className="pagination-count">Showing {start}–{end} of {rows.length}</span>
+        <span className="pagination-count">{t("pagination.showing")} {start}–{end} {t("pagination.of")} {rows.length}</span>
         <div className="pagination-controls">
-          <label className="pagination-size">Rows per page
+          <label className="pagination-size">{t("pagination.rowsPerPage")}
             <select value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setPage(0); }}>
               {pageSizeOptions.map((size) => <option key={size} value={size}>{size}</option>)}
             </select>
           </label>
-          <span className="pagination-page">Page {page + 1} of {pageCount}</span>
+          <span className="pagination-page">{t("pagination.page")} {page + 1} {t("pagination.of")} {pageCount}</span>
           <div className="pagination-buttons">
-            <button aria-label="First page" className="table-nav-button" disabled={page === 0} onClick={() => setPage(0)}><ChevronFirst size={16} /></button>
-            <button aria-label="Previous page" className="table-nav-button" disabled={page === 0} onClick={() => setPage((value) => Math.max(0, value - 1))}><ChevronLeft size={16} /></button>
-            <button aria-label="Next page" className="table-nav-button" disabled={page >= pageCount - 1} onClick={() => setPage((value) => Math.min(pageCount - 1, value + 1))}><ChevronRight size={16} /></button>
-            <button aria-label="Last page" className="table-nav-button" disabled={page >= pageCount - 1} onClick={() => setPage(pageCount - 1)}><ChevronLast size={16} /></button>
+            <button aria-label={t("pagination.first")} className="table-nav-button" disabled={page === 0} onClick={() => setPage(0)}><ChevronFirst size={16} /></button>
+            <button aria-label={t("pagination.previous")} className="table-nav-button" disabled={page === 0} onClick={() => setPage((value) => Math.max(0, value - 1))}><ChevronLeft size={16} /></button>
+            <button aria-label={t("pagination.next")} className="table-nav-button" disabled={page >= pageCount - 1} onClick={() => setPage((value) => Math.min(pageCount - 1, value + 1))}><ChevronRight size={16} /></button>
+            <button aria-label={t("pagination.last")} className="table-nav-button" disabled={page >= pageCount - 1} onClick={() => setPage(pageCount - 1)}><ChevronLast size={16} /></button>
           </div>
         </div>
       </div> : null}

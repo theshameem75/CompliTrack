@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, Award, BookOpenCheck, Home, MapPinOff, ShieldCheck } from "lucide-react";
 import { useT } from "../../lib/i18n/LocalizationProvider";
+import { LanguageSwitcher } from "../../shared/ui/LanguageSwitcher";
 
 export function NotFoundPage({ onNavigate }: { onNavigate: (path: string) => void }) {
   const { t } = useT();
@@ -15,7 +16,7 @@ export function NotFoundPage({ onNavigate }: { onNavigate: (path: string) => voi
 
     <header className="not-found-header">
       <a className="not-found-brand" href="/login"><img src="/complitrack-logo.svg" alt="" /><span>{t("app.name")}</span></a>
-      <span><ShieldCheck size={15} /> {t("notFound.secure")}</span>
+      <div className="public-language-actions"><span className="not-found-secure"><ShieldCheck size={15} /> {t("notFound.secure")}</span><LanguageSwitcher dark /></div>
     </header>
 
     <div className="not-found-content">

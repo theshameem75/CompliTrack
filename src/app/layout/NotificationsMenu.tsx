@@ -6,23 +6,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "../../shared/ui/dropdown-menu";
+import { useT } from "../../lib/i18n/LocalizationProvider";
 
 // Reference-only shell: Blocks does not expose a notifications API, so this
 // renders a real, accessible menu with a static empty state rather than
 // faking data against a Blocks endpoint that does not exist.
 export function NotificationsMenu() {
+  const { t } = useT();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="icon-button" aria-label="Notifications">
+      <DropdownMenuTrigger className="icon-button" aria-label={t("notifications.label")}>
         <Bell size={18} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[300px]">
-        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("notifications.label")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col items-center gap-2 px-3 py-8 text-center">
           <CheckCheck size={22} className="text-[hsl(var(--muted-foreground))]" />
-          <p className="text-sm font-medium">You're all caught up</p>
-          <p className="text-xs text-[hsl(var(--muted-foreground))]">No new notifications right now.</p>
+          <p className="text-sm font-medium">{t("notifications.empty")}</p>
+          <p className="text-xs text-[hsl(var(--muted-foreground))]">{t("notifications.emptyDescription")}</p>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

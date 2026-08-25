@@ -4,6 +4,7 @@ import { useAuth } from "../../app/providers/AuthProvider";
 import { isLoginConfigured } from "../../lib/blocks/config";
 import { useT } from "../../lib/i18n/LocalizationProvider";
 import { Alert } from "../../shared/ui/Alert";
+import { LanguageSwitcher } from "../../shared/ui/LanguageSwitcher";
 
 export function LoginPage({ returnTo }: { returnTo?: string }) {
   const { login } = useAuth();
@@ -64,6 +65,7 @@ export function LoginPage({ returnTo }: { returnTo?: string }) {
       </section>
 
       <section className="auth-access">
+        <div className="auth-login-language"><LanguageSwitcher /></div>
         <div className="auth-access-inner">
           <div className="auth-mobile-brand">
             <img src="/complitrack-logo.svg" alt="" />
