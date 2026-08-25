@@ -1,0 +1,11 @@
+{
+  "project": {
+    "tenantId": "Sba0c99247e2e4e4091e1bfbcc3648396",
+    "apiUrl": "https://blocksapi.slsblx.com",
+    "appDomain": "https://sbgmze-eiuwy.slsblx.com"
+  },
+  "data": {
+    "schemas": "blocks/data/schemas",
+    "rules": "blocks/data/rules.json"
+  }
+}

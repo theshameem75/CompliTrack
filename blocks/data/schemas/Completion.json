@@ -1,0 +1,17 @@
+{
+  "collectionName": "blx_Completions",
+  "fields": [
+    { "name": "assignmentId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "courseId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "userId", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "status", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "progressPercent", "type": "Float", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "startedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "completedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "verifiedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "verifiedBy", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "managerNote", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false }
+  ],
+  "schemaName": "Completion",
+  "schemaType": 1
+}

@@ -1,0 +1,9 @@
+{
+  "compliance.active": "Active",
+  "compliance.assigned": "Assigned",
+  "compliance.certificateIssued": "Certificate issued",
+  "compliance.completed": "Completed",
+  "compliance.inProgress": "In progress",
+  "compliance.managerVerification": "Manager verification",
+  "compliance.restricted": "Access restricted"
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "blx_ComplianceSettings",
+  "fields": [
+    { "name": "organizationId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": true },
+    { "name": "gracePeriodDays", "type": "Float", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "autoAssignOnRoleChange", "type": "Boolean", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "managerVerificationRequired", "type": "Boolean", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "reminderDays", "type": "Float", "isArray": true, "isPIIData": false, "isUniqueData": false },
+    { "name": "defaultLanguage", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "complianceLabel", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "restrictedRoleSlug", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false }
+  ],
+  "schemaName": "ComplianceSetting",
+  "schemaType": 1
+}

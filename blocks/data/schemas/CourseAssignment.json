@@ -1,0 +1,19 @@
+{
+  "collectionName": "blx_CourseAssignments",
+  "fields": [
+    { "name": "courseId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "courseTitle", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "userId", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "userName", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "userEmail", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "role", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "department", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "status", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "assignedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "dueAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "assignedBy", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "autoAssigned", "type": "Boolean", "isArray": false, "isPIIData": false, "isUniqueData": false }
+  ],
+  "schemaName": "CourseAssignment",
+  "schemaType": 1
+}

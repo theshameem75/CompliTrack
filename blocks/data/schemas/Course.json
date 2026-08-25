@@ -1,0 +1,17 @@
+{
+  "collectionName": "blx_Courses",
+  "fields": [
+    { "name": "title", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "code", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": true },
+    { "name": "description", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "department", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "targetRoles", "type": "String", "isArray": true, "isPIIData": false, "isUniqueData": false },
+    { "name": "durationMinutes", "type": "Float", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "validityDays", "type": "Float", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "certificateTemplate", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "localizedLabels", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "isActive", "type": "Boolean", "isArray": false, "isPIIData": false, "isUniqueData": false }
+  ],
+  "schemaName": "Course",
+  "schemaType": 1
+}

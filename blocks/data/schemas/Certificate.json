@@ -1,0 +1,21 @@
+{
+  "collectionName": "blx_Certificates",
+  "fields": [
+    { "name": "certificateNumber", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": true },
+    { "name": "courseId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "courseTitle", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "completionId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "userId", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "userName", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "userEmail", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false },
+    { "name": "issuedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "expiresAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "graceEndsAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "status", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "pdfFileId", "type": "String", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "revokedAt", "type": "DateTime", "isArray": false, "isPIIData": false, "isUniqueData": false },
+    { "name": "revokedBy", "type": "String", "isArray": false, "isPIIData": true, "isUniqueData": false }
+  ],
+  "schemaName": "Certificate",
+  "schemaType": 1
+}
