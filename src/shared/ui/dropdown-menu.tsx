@@ -3,6 +3,7 @@
 // get focus trapping, keyboard nav (arrow keys, typeahead, Esc-to-close),
 // and outside-click handling for free instead of hand-rolled state.
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { Check, Circle } from "lucide-react";
 import type { ComponentPropsWithoutRef, ElementRef } from "react";
 import { forwardRef } from "react";
 import { cn } from "../../lib/utils";
@@ -70,3 +71,47 @@ export const DropdownMenuSeparator = forwardRef<
   />
 ));
 DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
+
+export const DropdownMenuCheckboxItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ children, className, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-pointer select-none items-center rounded-lg py-2.5 pl-9 pr-2.5 text-sm font-medium outline-none",
+      "data-[highlighted]:bg-[hsl(var(--secondary))] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2.5 flex h-4 w-4 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator><Check size={15} /></DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName = "DropdownMenuCheckboxItem";
+
+export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+export const DropdownMenuRadioItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ children, className, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-pointer select-none items-center rounded-lg py-2.5 pl-9 pr-2.5 text-sm font-medium outline-none",
+      "data-[highlighted]:bg-[hsl(var(--secondary))] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2.5 flex h-4 w-4 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator><Circle size={8} fill="currentColor" /></DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = "DropdownMenuRadioItem";
