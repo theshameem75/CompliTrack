@@ -20,11 +20,11 @@ export function SelectMenu({ label, onChange, options, placeholder = "Select an 
   value: string;
 }) {
   const selected = options.find((option) => option.value === value);
-  return <label className="form-field">
+  return <div className="form-field">
     <span>{label}</span>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="select-trigger" type="button">
+        <button aria-label={label} className="select-trigger" type="button">
           <span className={selected ? "" : "select-placeholder"}>{selected?.label ?? placeholder}</span>
           <ChevronDown size={16} />
         </button>
@@ -35,7 +35,7 @@ export function SelectMenu({ label, onChange, options, placeholder = "Select an 
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  </label>;
+  </div>;
 }
 
 export function MultiSelectMenu({ label, onChange, options, placeholder = "Select roles", values }: {
@@ -49,14 +49,14 @@ export function MultiSelectMenu({ label, onChange, options, placeholder = "Selec
     onChange(checked ? [...new Set([...values, value])] : values.filter((item) => item !== value));
   }
 
-  return <label className="form-field">
+  const selected = options.filter((option) => values.includes(option.value));
+
+  return <div className="form-field">
     <span>{label}</span>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="select-trigger" type="button">
-          <span className={values.length ? "select-summary" : "select-placeholder"}>
-            {values.length ? `${values.length} role${values.length === 1 ? "" : "s"} selected` : placeholder}
-          </span>
+        <button aria-label={label} className="select-trigger select-trigger-multiple" type="button">
+          {selected.length ? <span className="select-values">{selected.map((option) => <span className="select-value-chip" key={option.value}>{option.label}</span>)}</span> : <span className="select-placeholder">{placeholder}</span>}
           <ChevronDown size={16} />
         </button>
       </DropdownMenuTrigger>
@@ -74,7 +74,7 @@ export function MultiSelectMenu({ label, onChange, options, placeholder = "Selec
         {values.length ? <><DropdownMenuSeparator /><button className="select-clear" type="button" onClick={() => onChange([])}><Check size={14} /> Clear selection</button></> : null}
       </DropdownMenuContent>
     </DropdownMenu>
-  </label>;
+  </div>;
 }
 
 function roleDescription(value: string) {
