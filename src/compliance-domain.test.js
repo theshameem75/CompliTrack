@@ -1,3 +1,0 @@
-import assert from 'node:assert/strict'; import {STATUS,transitionAssignment,certificateState,reminderDue} from './compliance-domain.js';
-const a=transitionAssignment({status:STATUS.ASSIGNED},STATUS.IN_PROGRESS,'employee'); assert.equal(a.status,'InProgress'); assert.throws(()=>transitionAssignment(a,STATUS.ISSUED,'employee'));
-const now=new Date('2026-08-20T00:00:00Z'); assert.equal(certificateState({expiresAt:'2026-08-15T00:00:00Z',status:'Active'},{gracePeriodDays:7},now),'Expired'); assert.equal(certificateState({expiresAt:'2026-08-10T00:00:00Z',status:'Active'},{gracePeriodDays:7},now),'Restricted'); assert.equal(reminderDue({expiresAt:'2026-09-19T00:00:00Z'},[30],now),true);

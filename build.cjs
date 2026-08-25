@@ -1,1 +1,0 @@
-const fs=require('fs'),path=require('path');const out=path.join(__dirname,'dist');fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out);for(const f of fs.readdirSync(__dirname)){if(['.html','.css','.js'].includes(path.extname(f)))fs.copyFileSync(path.join(__dirname,f),path.join(out,f))}console.log('Built CompliTrack to dist');
